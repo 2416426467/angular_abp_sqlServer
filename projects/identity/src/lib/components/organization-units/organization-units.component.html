@@ -1,0 +1,294 @@
+<div class="organization-box" *ngIf="true">
+    <div class="units_tree_box">
+        <div class="unit_tree_header">
+            <h4>{{ 'AbpIdentity::OrganizationUnits' | abpLocalization }}</h4>
+            <button mat-icon-button color="accent" (click)="openADDunitDialog('', 'New')">
+                <mat-icon>add</mat-icon>
+            </button>
+        </div>
+        <div class="units_tree_body">
+            <!-- 嵌套树 -->
+            <mat-tree #tree [dataSource]="treeinit_data" [treeControl]="treeControl" class="example-tree">
+                <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle class="example-tree-node">
+                    <div class="mat-tree-node dragboxes">
+                        <button mat-icon-button disabled></button>
+                        <div class="buttonbox" [node]="node" draggable="true" [node]="node">
+                            <div [class.buttonactive]="buttonselect?.id === node.id" class="buttonboxcon">
+                                    <button mat-button button-text (click.stop)="clickedtree(node)">
+                                        {{ node.displayName }}
+                                    </button>
+                                    <mat-icon button-icon class="mat-button-icon-mirror"
+                                        [matMenuTriggerFor]="clickHoverMenu" [matMenuTriggerData]="{ node: node }">
+                                        more_horiz
+                                    </mat-icon>
+                                <div class="dragchildren" [node]="{ node: node, action: 'Inside' }" *ngIf="isdrag">
+                                </div>
+                                <div class="dragsibling" [node]="{ node: node, action: 'Bottom' }" *ngIf="true">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-tree-node>
+
+                <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild" class="example-tree-node">
+                    <div class="mat-tree-node dragboxes">
+                        <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.displayName">
+                            <mat-icon class="mat-icon-rtl-mirror">
+                                {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
+                            </mat-icon>
+                        </button>
+                        <div class="buttonbox" [node]="node" draggable="true">
+                            <div [class.buttonactive]="buttonselect?.id === node.id" class="buttonboxcon">
+                                    <button mat-button button-text (click.stop)="clickedtree(node)">
+                                        {{ node.displayName }}
+                                    </button>
+                                    <mat-icon button-icon class="mat-button-icon-mirror"
+                                        [matMenuTriggerFor]="clickHoverMenu" [matMenuTriggerData]="{ node: node }">
+                                        more_horiz
+                                    </mat-icon>
+                                <div class="dragchildren" [node]="{ node: node, action: 'Inside' }" *ngIf="isdrag">
+                                </div>
+                                <div class="dragsibling" [node]="{ node: node, action: 'Bottom' }" *ngIf="true">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div [class.example-tree-invisible]="!treeControl.isExpanded(node)" role="group">
+                        <ng-container matTreeNodeOutlet></ng-container>
+                    </div>
+                </mat-nested-tree-node>
+            </mat-tree>
+            <mat-menu #clickHoverMenu="matMenu">
+                <ng-template matMenuContent let-node="node">
+                    <button mat-menu-item (click)="openADDunitDialog(node, 'NewSubUnit')">
+                        {{ 'AbpIdentity::NewSubUnit' | abpLocalization }}
+                    </button>
+                    <button mat-menu-item (click)="openUpdateUnitsDialog(node)"> {{ 'AbpIdentity::Edit' | abpLocalization }}</button>
+                    <hr />
+                    <button mat-menu-item (click)="openDelectunitDialog(node)"> {{ 'AbpIdentity::Delete' | abpLocalization }}</button>
+                </ng-template>
+            </mat-menu>
+            <!-- 嵌套树end  -->
+
+
+        </div>
+    </div>
+    <div class="units_table_box">
+        <div class="units_table_header">
+            <h5>{{ 'AbpIdentity::Members' | abpLocalization }}</h5>
+                <button mat-raised-button class="" *ngIf="buttonselect" styles="primary"
+                    (click.stop)="openAddworkerDialog(buttonselect, 'SelectMembers')">
+                    <mat-icon>add</mat-icon>
+                    <span>{{ 'AbpIdentity::AddMembers' | abpLocalization }}</span>
+                </button>
+        </div>
+        <div class="units_table_body">
+            <lib-table [Settable]="Settable" (Paginatorchange)="pagechange($event)"
+                (tableoperateway)="tableoperateway($event)">
+            </lib-table>
+        </div>
+    </div>
+
+</div>
+
+<lib-modals [ModalConfig]="modalconfig" (closeway)="closemodals($event)">
+    <ng-template #libHeader let-dialogRef>
+        <h4> {{modalsmess.title===undefined||modalsmess.title===null?'': 'AbpIdentity::'+modalsmess.title||'' | abpLocalization }}</h4>
+    </ng-template>
+    <ng-template #libbody let-dialogRef>
+        <div class="modals_libbody" *ngIf="modalsmess.formtype === 'Addworker'">
+            <form #dyform="ngForm" class="dyform_form_box">
+                <lib-dynamic-form [_formgroup]="formgroup" [_formdata]="formdata"></lib-dynamic-form>
+                <button class="modals_search" mat-button color="accent"
+                    [disabled]="formgroup ===null? false : !formgroup.valid" (click)="searchbtn()">
+                    <mat-icon>search</mat-icon>
+                </button>
+            </form>
+            <div style="height: calc(100% - 40px);">
+                <lib-table [Settable]="Setworkertable" (Paginatorchange)="pageworkerchange($event)"
+                    (SelectTheTable)="SelectTheTable($event)">
+                </lib-table>
+            </div>
+        </div>
+        <!-- 删除提示信息 -->
+        <div class="pagelateunit_inputname" *ngIf="modalsmess.formtype === 'delete'">
+            <label class="inputname_label">
+                <mat-icon style="font-size: 60px; height: auto; width: auto; color: #6c757d">help</mat-icon>
+            </label>
+            <div class="">
+                <!-- {{ modalsmess.delectlabel }} -->
+                {{ 'AbpIdentity::'+modalsmess.delectlabel||'' | abpLocalization }}
+            </div>
+        </div>
+        <div class="modals_libbody" *ngIf="modalsmess.formtype === 'create' || modalsmess.formtype === 'update'">
+            <form #dyform="ngForm" class="dyform_form_box">
+                <lib-dynamic-form [_formgroup]="formgroup" [_formdata]="formdata"></lib-dynamic-form>
+            </form>
+        </div>
+    </ng-template>
+    <ng-template #libFooter let-dialogRef>
+        <mat-dialog-actions>
+            <button mat-stroked-button (click)="dialogRef.close()">{{ 'AbpIdentity::Cancel' | abpLocalization }}</button>
+            <button mat-raised-button color="accent" [disabled]="formgroup ===null? false : !formgroup.valid"
+                (click)="OnSaveSubmit(dialogRef)">
+                {{ 'AbpIdentity::Save' | abpLocalization }}
+                
+            </button>
+        </mat-dialog-actions>
+    </ng-template>
+</lib-modals>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 
+
+
+<div class="organization_box" *ngIf="true">
+    <div class="page_title">
+        <div class="page_title_left">
+            <h4>{{ 'AbpIdentity::OrganizationUnits' | abpLocalization }}</h4>
+        </div>
+        <div class="page_title_right" *ngIf="buttonselect">
+            <button mat-raised-button class="" styles="primary"
+                (click.stop)="openAddworkerDialog(buttonselect, '选择人员')">
+                <mat-icon>add</mat-icon>
+                <span>添加人员</span>
+            </button>
+        </div>
+    </div>
+
+    <lib-modals [ModalConfig]="modalconfig" (closeway)="closemodals($event)">
+        <ng-template #libHeader let-dialogRef>
+            <h4>{{ modalsmess.title || '' }}</h4>
+        </ng-template>
+        <ng-template #libbody let-dialogRef>
+            <div class="modals_libbody" *ngIf="modalsmess.formtype === 'Addworker'">
+                <form #dyform="ngForm" class="dyform_form_box">
+                    <lib-dynamic-form [_formgroup]="formgroup" [_formdata]="formdata"></lib-dynamic-form>
+                    <button class="modals_search" mat-button color="accent"
+                        [disabled]="formgroup ===null? false : !formgroup.valid" (click)="searchbtn()">
+                        <mat-icon>search</mat-icon>
+                    </button>
+                </form>
+                <div style="height: calc(100% - 40px);">
+                    <lib-table [Settable]="Setworkertable" (Paginatorchange)="pageworkerchange($event)"
+                        (SelectTheTable)="SelectTheTable($event)">
+                    </lib-table>
+                </div>
+            </div>
+            <div class="pagelateunit_inputname" *ngIf="modalsmess.formtype === 'delete'">
+                <label class="inputname_label">
+                    <mat-icon style="font-size: 60px; height: auto; width: auto; color: #6c757d">help</mat-icon>
+                </label>
+                <div class="">
+                    {{ modalsmess.delectlabel }}
+                </div>
+            </div>
+            <div class="modals_libbody" *ngIf="modalsmess.formtype === 'create' || modalsmess.formtype === 'update'">
+                <form #dyform="ngForm" class="dyform_form_box">
+                    <lib-dynamic-form [_formgroup]="formgroup" [_formdata]="formdata"></lib-dynamic-form>
+                </form>
+            </div>
+        </ng-template>
+        <ng-template #libFooter let-dialogRef>
+            <mat-dialog-actions>
+                <button mat-stroked-button (click)="dialogRef.close()">取消</button>
+                <button mat-raised-button color="accent" [disabled]="formgroup ===null? false : !formgroup.valid"
+                    (click)="OnSaveSubmit(dialogRef)">
+                    确认
+                </button>
+            </mat-dialog-actions>
+        </ng-template>
+    </lib-modals>
+
+    <div class="page_content">
+        <div class="tree_box">
+            <button mat-raised-button class="treebox_add" (click)="openADDunitDialog('', '新建根组织机构')" color="accent">
+                <span>新建根机构</span>
+            </button>
+            <div class="treebox_con">
+                <mat-tree #tree [dataSource]="treeinit_data" [treeControl]="treeControl" class="example-tree">
+                    <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle class="example-tree-node">
+                        <div class="mat-tree-node dragboxes">
+                            <button mat-icon-button disabled></button>
+                            <div class="buttonbox" [node]="node" draggable="true" [node]="node">
+                                <div [class.buttonactive]="buttonselect?.id === node.id" class="buttonboxcon">
+                                    <button mat-button button-text (click.stop)="clickedtree(node)">
+                                        {{ node.displayName }}
+                                    </button>
+                                    <mat-icon button-icon class="mat-button-icon-mirror"
+                                        [matMenuTriggerFor]="clickHoverMenu" [matMenuTriggerData]="{ node: node }">
+                                        more_horiz
+                                    </mat-icon>
+                                    <div class="dragchildren" [node]="{ node: node, action: 'Inside' }" *ngIf="isdrag">
+                                    </div>
+                                    <div class="dragsibling" [node]="{ node: node, action: 'Bottom' }" *ngIf="true">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-tree-node>
+
+                    <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild" class="example-tree-node">
+                        <div class="mat-tree-node dragboxes">
+                            <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.displayName">
+                                <mat-icon class="mat-icon-rtl-mirror">
+                                    {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
+                                </mat-icon>
+                            </button>
+                            <div class="buttonbox" [node]="node" draggable="true">
+                                <div [class.buttonactive]="buttonselect?.id === node.id" class="buttonboxcon">
+                                    <button mat-button button-text (click.stop)="clickedtree(node)">
+                                        {{ node.displayName }}
+                                    </button>
+                                    <mat-icon button-icon class="mat-button-icon-mirror"
+                                        [matMenuTriggerFor]="clickHoverMenu" [matMenuTriggerData]="{ node: node }">
+                                        more_horiz
+                                    </mat-icon>
+                                    <div class="dragchildren" [node]="{ node: node, action: 'Inside' }" *ngIf="isdrag">
+                                    </div>
+                                    <div class="dragsibling" [node]="{ node: node, action: 'Bottom' }" *ngIf="true">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div [class.example-tree-invisible]="!treeControl.isExpanded(node)" role="group">
+                            <ng-container matTreeNodeOutlet></ng-container>
+                        </div>
+                    </mat-nested-tree-node>
+                </mat-tree>
+
+            </div>
+        </div>
+        <mat-menu #clickHoverMenu="matMenu">
+            <ng-template matMenuContent let-node="node">
+                <button mat-menu-item (click)="openADDunitDialog(node, '新建子组织机构')">
+                    新建子组织机构
+                </button>
+                <button mat-menu-item (click)="openUpdateUnitsDialog(node)">编辑</button>
+                <hr />
+                <button mat-menu-item (click)="openDelectunitDialog(node)">删除</button>
+            </ng-template>
+        </mat-menu>
+
+        <div class="crew_list">
+            <div class="crew_list_box">
+                <lib-table [Settable]="Settable" (Paginatorchange)="pagechange($event)"
+                    (tableoperateway)="tableoperateway($event)">
+                </lib-table>
+            </div>
+        </div>
+    </div>
+
+
+
+</div> -->

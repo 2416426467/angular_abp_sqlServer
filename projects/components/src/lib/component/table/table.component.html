@@ -1,0 +1,148 @@
+<section class="crew_list_container" tabindex="0">
+  <table mat-table [dataSource]="listdataSource" class="table_box">
+
+    <ng-container *ngFor="let column of displayedColumns" [matColumnDef]="column">
+
+      <th class="table_th" [style]="_Settable.tdStyle" mat-header-cell *matHeaderCellDef>
+        <ng-container *ngIf="column!=='ischeck'; else elseTemplate">
+          {{ 'AbpIdentity::'+(ColumnsReplace?ColumnsReplace[column]?ColumnsReplace[column]:column:column) | abpLocalization }}
+        </ng-container>
+        <ng-template #elseTemplate>
+          <mat-checkbox #checkbox class="example-margin" (change)="RowsAllSelect(checkbox)">
+          </mat-checkbox>
+        </ng-template>
+      </th>
+      <td class="table_td" [style]="_Settable.tdStyle" mat-cell *matCellDef="let element">
+        <ng-container [ngTemplateOutlet]="
+            column === 'operate' ? operateLink : column === 'ischeck' ? checkLink : defaultLink
+          " [ngTemplateOutletContext]="{ $implicit: { column: column, element: element } }"></ng-container>
+      </td>
+    </ng-container>
+    <ng-template #checkLink let-tabtd>
+      <mat-checkbox class="example-margin" (click)="clickedRows(tabtd.element)" [(ngModel)]="tabtd.element.ischeck">
+      </mat-checkbox>
+    </ng-template>
+    <ng-template #defaultLink let-tabtd>
+      {{ tabtd.element[tabtd.column] }}
+    </ng-template>
+    <ng-template #operateLink let-element>
+      <!-- {{element.element.operate|json}} -->
+      <ng-container *ngFor="let tab_ope of element.element.operate">
+        <ng-container [ngTemplateOutlet]="tab_ope.type === 'menus' ? menusbutton : default"
+          [ngTemplateOutletContext]="{ $implicit: tab_ope }"></ng-container>
+      </ng-container>
+      <ng-template #menusbutton let-tabope>
+        <button class="operate_menu" mat-button [matMenuTriggerFor]="MatMenuTrigger" click.stop> {{ 'AbpIdentity::'+
+          tabope.label |abpLocalization}} <mat-icon class="operate_menu_icon">arrow_drop_down</mat-icon></button>
+        <mat-menu #MatMenuTrigger="matMenu">
+          <button mat-menu-item color="accent" class="treebox_add" (click)="operateway(element.element, item)"
+            *ngFor="let item of tabope.menuslist">
+            <span>{{'AbpIdentity::'+ item |abpLocalization}}</span>
+          </button>
+        </mat-menu>
+      </ng-template>
+      <ng-template #default let-tabope>
+        <button mat-button color="accent" class="treebox_add" (click.stop)="operateway(element.element, tabope.label)">
+          <span> {{'AbpIdentity::'+ tabope.label |abpLocalization}}</span>
+        </button>
+      </ng-template>
+      <button mat-icon-button color="accent" *ngIf="ischeckstore.length > 0" class="treebox_add"
+        (click.stop)="deleteall()">
+        <mat-icon matTooltip="删除全部">delete</mat-icon>
+      </button>
+    </ng-template>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-row class="table_tr" [class.tableactive]="tableselect?.id === row.id || row.ischeck"
+      (click.stop)="clickedRows(row)" *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+  <div class="notdata_box" *ngIf="listdataSource.length === 0">
+    {{'AbpIdentity::NoDataAvailableInDatatable'|abpLocalization}}</div>
+  <!-- No data available -->
+</section>
+<ng-container *ngIf="listdataSource.length > 0">
+  <mat-paginator [length]="_Settable.totalCount" [pageIndex]="_Settable.skipCount" #paginator
+    (page)="pagechange($event)" [pageSize]="_Settable.maxResultCount" aria-label="Select page">
+  </mat-paginator>
+</ng-container>
+
+
+
+<!-- 
+引用 identity.module
+/* 挎包引入需更新链接 */
+import { TableComponent } from "../../../components/src/lib/component/table/table.component";
+
+html
+     <lib-table [Settable]="Settable" (Paginatorchange)="pagechange($event)" (tableoperateway)="tableoperateway($event)" (SelectTheTable)="SelectTheTable($event)"></lib-table>
+     
+ts
+  /* 组织机构成员表格数据 */
+  Settable: any = {
+    maxResultCount: 15, //每页显示数量
+    skipCount: 0, //分页
+    tdStyle: 'text-align: left;padding: 0 20px;',//td样式
+    list: [{
+      'name':'',
+      'phoneNumber':'',
+      operate = [{
+        type: 'menus',
+        label: '操作',
+        menuslist:item.isStatic?['Claims','权限']:['编辑','Claims','权限','删除']
+      }]
+    }], //表格列表数据
+    totalCount: 0, //表格列表数量
+    ischeck: true, //是否显示多择按钮
+    isoperate: true, //是否显示操作按钮
+    operatepositionhead: true,
+    SelectWorkerData: [], //多选时表格选择的数据
+    displayedColumns: [
+      //表格表头
+      'name',
+      'phoneNumber',
+      // 'operate',
+    ],
+    ColumnsReplace:{
+      name:'UserName',
+      phoneNumber:'PhoneNumber',
+      userName:'Surname',
+      email:'EmailAddress',
+      // isActive:'',
+      creationTime:'CreationTime',
+      operate:'Actions',
+    },
+    
+  };
+
+
+  /* 分页器切换分页 */
+  pagechange(val: any) {
+    this.Settable.skipCount = val.pageIndex;
+    this.getuserslist(this.buttonselect);
+  }
+  /* 表格操作方法
+  return {
+    element:{}
+    label:'删除'
+  }
+  */
+  tableoperateway(wayval: any) {
+    console.log('列表操作方法', wayval);
+    if (wayval.label == '删除') {
+    }
+  }
+
+  /* 选中表格事件 */
+  SelectTheTable(table: any) {
+    let Setworkertable = JSON.parse(JSON.stringify(this.Setworkertable));
+    Setworkertable.SelectWorkerData = table;
+    this.Setworkertable = Setworkertable;
+  }
+
+
+
+
+
+
+
+
+ -->

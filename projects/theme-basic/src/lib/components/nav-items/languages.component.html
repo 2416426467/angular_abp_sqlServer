@@ -1,0 +1,20 @@
+
+
+<div *ngIf="((dropdownLanguages$ | async)?.length || 0) > 0" class="dropdown" ngbDropdown
+    #languageDropdown="ngbDropdown" display="static">
+
+    <button mat-icon-button [matMenuTriggerFor]="menu" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
+        aria-expanded="false">
+        <!-- {{ defaultLanguage$ | async }} 
+        <mat-icon>arrow_drop_down</mat-icon> -->
+        <mat-icon>g_translate</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu" ria-labelledby="dropdownMenuLink"
+        [class.d-block]="smallScreen && languageDropdown.isOpen()">
+        <button mat-menu-item class="mat-menu-button" style="max-height: 40px;"
+            *ngFor="let lang of dropdownLanguages$ | async" (click)="onChangeLang(lang.cultureName || '')">{{
+            lang?.displayName }}</button>
+    </mat-menu>
+
+
+</div>

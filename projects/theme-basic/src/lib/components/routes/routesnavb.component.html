@@ -1,0 +1,229 @@
+<!-- 左侧菜单导航 -->
+<mat-nav-list class="matnavlist_box">
+    <ng-container *ngFor="let route of routesService.visible$ | async; trackBy: trackByFn"
+        [ngTemplateOutlet]="isDropdown(route) ? dropdownLink : defaultLink"
+        [ngTemplateOutletContext]="{ $implicit: route }">
+    </ng-container>
+</mat-nav-list>
+<!-- not drop-down -->
+<ng-template #defaultLink let-route>
+    <div class="matnavlist_items" *abpPermission="route.requiredPolicy" [routerLinkActiveOptions]="{ exact: true }"
+        routerLinkActive="activestyle">
+        <a mat-list-item class="" [routerLink]="[route.path]">
+            <i *ngIf="route.iconClass" class="material_icon" [ngClass]="route.iconClass"></i>
+            <span *ngIf="service.smallScreen?true:!issideicon">{{ route.name | abpLocalization }}(一级不带下拉)</span>
+        </a>
+    </div>
+</ng-template>
+<!-- is drop-down -->
+<ng-template #dropdownLink let-route>
+    <!-- pc端 -->
+    <mat-accordion style="background: inherit;color: inherit;" multi="false" displayMode="flat"
+        [hideToggle]="issideicon" *ngIf="!issideicon; else elseBlockmenu">
+        <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false"
+            style="background: inherit;color: inherit;">
+            <mat-expansion-panel-header style="padding: 0 16px;">
+                <mat-panel-title class="matnavlist_items">
+                    <i *ngIf="route.iconClass" class="material_icon" [ngClass]="route.iconClass"></i>
+                    <span *ngIf="service.smallScreen?'true':!issideicon"> {{ route.name | abpLocalization
+                        }}(一级下拉目录)</span>
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="">
+                <div #routeContainer>
+                    <ng-container *ngTemplateOutlet="forTemplate; context: { $implicit: route }"></ng-container>
+                </div>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <!-- 移动端 -->
+    <ng-template #elseBlockmenu>
+        <ng-container [ngTemplateOutlet]="defaultmenu" [ngTemplateOutletContext]="{ $implicit: route }"></ng-container>
+    </ng-template>
+</ng-template>
+
+<!-- 正常状态下，左侧菜单 二级-->
+<ng-template #forTemplate let-route>
+    <ng-container *ngFor="let child of route.children">
+        <ng-template [ngTemplateOutlet]="child.children?.length ? dropdownChild : defaultChild"
+            [ngTemplateOutletContext]="{ $implicit: child }"></ng-template>
+    </ng-container>
+</ng-template>
+<!-- 没有下拉 -->
+<ng-template #defaultChild let-child>
+    <ng-container *ngIf="child.path">
+        <div *abpPermission="child.requiredPolicy" [routerLinkActiveOptions]="{ exact: true }"
+            routerLinkActive="activestyle" class="matnavlist_items">
+            <a mat-menu-item [style.paddingLeft]="child.invisible===undefined?'52px':'32px'" (click)="closeDropdown()"
+                [routerLink]="[child.path]">
+                <i *ngIf="child.iconClass" class="material_icon" [ngClass]="child.iconClass"></i>
+                <span> {{ child.name | abpLocalization }}</span>
+            </a>
+        </div>
+    </ng-container>
+</ng-template>
+<!-- 二级有下拉 -->
+<ng-template #dropdownChild let-child>
+    <mat-accordion multi="false" displayMode="flat" class="dropdownChild">
+        <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+            <mat-expansion-panel-header style="padding: 0  16px 0 32px ;">
+                <mat-panel-title class="matnavlist_items">
+                    <i *ngIf="child.iconClass" class="material_icon" [ngClass]="child.iconClass"></i>
+                    {{ child.name | abpLocalization }}
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="">
+                <div #routeContainer>
+                    <ng-container *ngTemplateOutlet="forTemplate; context: { $implicit: child }"></ng-container>
+                </div>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+</ng-template>
+
+
+<!-- 只有图标时显示 -->
+<!-- 左侧菜单导航 -->
+
+
+
+
+<!-- 图标状态下，左侧菜单 -->
+<ng-template #defaultmenu let-route>
+
+    <div class="example-menu" main cdkMenu>
+        <button mat-button cdkMenuItem class="example-standalone-trigger matnavlist_items"
+            [cdkMenuTriggerFor]="firstlist" [ngTemplateOutletContext]="{ $implicit: route }">
+            <i *ngIf="route.iconClass" class="material_icon" [ngClass]="route.iconClass"></i>
+            <span *ngIf="service.smallScreen?'true':!issideicon"> {{ route.name | abpLocalization }}</span>
+        </button>
+
+        <ng-template #firstlist>
+            <div class="example-menu " cdkMenu>
+                <div *ngFor="let child of route.children">
+                    <div *ngIf="child.children.length; else elseexamplemenu">
+                        <button cdkMenuItem class="example-menu-item example-standalone-trigger"
+                            justify-content='space-between' [cdkMenuTriggerFor]="child.children.length?new_doc:''"
+                            *abpPermission="child.requiredPolicy">
+                            <i *ngIf="child.iconClass" class="material_icon" [ngClass]="child.iconClass"></i>
+                            <span>{{child.name| abpLocalization}} </span>
+                            <i *ngIf="child.children.length" class="fa fa-angle-right material_iconleft"></i>
+                        </button>
+                        <ng-template #new_doc>
+                            <ng-container [ngTemplateOutlet]="dropdownLinkchildnew_doc"
+                                [ngTemplateOutletContext]="{ $implicit: child }">
+                            </ng-container>
+                        </ng-template>
+                    </div>
+                    <ng-template #elseexamplemenu>
+                        <button cdkMenuItem class="example-menu-item " [routerLink]="[child.path]"
+                            justify-content='space-between' *abpPermission="child.requiredPolicy"
+                            [routerLinkActiveOptions]="{ exact: true }" [routerLinkActive]="'activestyle'">
+                            <i *ngIf="child.iconClass" class="material_icon" [ngClass]="child.iconClass"></i>
+                            <span>{{child.name| abpLocalization}} </span>
+                            <i *ngIf="child.children.length" class="fa fa-angle-right material_iconleft"></i>
+                        </button>
+                    </ng-template>
+                </div>
+            </div>
+        </ng-template>
+        <ng-template #dropdownLinkchildnew_doc let-routeitem>
+            <div class="example-menu " cdkMenu>
+                <div *ngFor="let child of routeitem.children">
+                    <div *ngIf="child.children.length; else elseexamplemenu">
+                        <button cdkMenuItem class="example-menu-item " justify-content='space-between'
+                            [cdkMenuTriggerFor]="child.children.length?new_doc:''"
+                            *abpPermission="child.requiredPolicy">
+                            <i *ngIf="child.iconClass" class="material_icon" [ngClass]="child.iconClass"></i>
+                            <span>{{child.name| abpLocalization}} </span>
+                            <i *ngIf="child.children.length" class="fa fa-angle-right material_iconleft"></i>
+                        </button>
+                        <ng-template #new_doc>
+                            <ng-container [ngTemplateOutlet]="dropdownLinkchildnew_doc"
+                                [ngTemplateOutletContext]="{ $implicit: child }">
+                            </ng-container>
+                        </ng-template>
+                    </div>
+                    <ng-template #elseexamplemenu>
+                        <button class="example-menu-item " [routerLink]="[child.path]" justify-content='space-between'
+                            cdkMenuItem *abpPermission="child.requiredPolicy"
+                            [routerLinkActiveOptions]="{ exact: true }" [routerLinkActive]="'activestyle'">
+                            <i *ngIf="child.iconClass" class="material_icon" [ngClass]="child.iconClass"></i>
+                            <span>{{child.name| abpLocalization}} </span>
+                            <i *ngIf="child.children.length" class="fa fa-angle-right material_iconleft"></i>
+                        </button>
+                    </ng-template>
+                </div>
+            </div>
+        </ng-template>
+    </div>
+
+
+
+</ng-template>
+
+
+
+
+
+<!-- 
+
+<ng-template #defaultmenu let-route>
+    <div cdkMenuBar>
+        <div class="example-menu " main cdkMenu>
+            <button mat-button cdkMenuItem class="matnavlist_items" [cdkMenuTriggerFor]="file"
+                [ngTemplateOutletContext]="{ $implicit: route }" [title]="route.name | abpLocalization">
+                <i *ngIf="route.iconClass" class="material_icon" [ngClass]="route.iconClass"></i>
+                <span *ngIf="service.smallScreen?'true':!issideicon"> {{ route.name | abpLocalization }}</span></button>
+        </div>
+        <ng-template #file>
+            <ng-container [ngTemplateOutlet]="dropdownLinkchild" [ngTemplateOutletContext]="{ $implicit: route }">
+            </ng-container>
+        </ng-template>
+    </div>
+</ng-template>
+
+
+
+<ng-template #dropdownLinkchild let-route>
+    <div class="example-menu " cdkMenu>
+        <div *ngFor="let child of route.children">
+            <div *ngIf="child.children.length; else elseexamplemenu">
+                <button class="example-menu-item " justify-content='space-between'
+                    [cdkMenuTriggerFor]="child.children.length?file:''" cdkMenuItem 
+                    *abpPermission="child.requiredPolicy">
+                    <i *ngIf="child.iconClass" class="material_icon" [ngClass]="child.iconClass"></i>
+                    <span>{{child.name| abpLocalization}} </span>
+                    <i *ngIf="child.children.length" class="fa fa-angle-right material_iconleft"></i>
+                </button>
+                <ng-template #new_doc>
+                    <ng-container [ngTemplateOutlet]="dropdownLinkchildnew_doc" [ngTemplateOutletContext]="{ $implicit: child }">
+                    </ng-container>
+                </ng-template>
+            </div>
+            <ng-template #elseexamplemenu>
+                <button class="example-menu-item " [routerLink]="[child.path]" justify-content='space-between'
+                     cdkMenuItem  *abpPermission="child.requiredPolicy" [routerLinkActiveOptions]="{ exact: true }"
+                    [routerLinkActive]="'activestyle'">
+                    <i *ngIf="child.iconClass" class="material_icon" [ngClass]="child.iconClass"></i>
+                    <span>{{child.name| abpLocalization}} </span>
+                    <i *ngIf="child.children.length" class="fa fa-angle-right material_iconleft"></i>
+                </button>
+            </ng-template>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #dropdownLinkchildnew_doc let-child>
+    <div class="example-menu" cdkMenu>
+      <div *ngFor="let grandson of child.children">
+        <button class="example-menu-item" [routerLink]="[grandson.path]" justify-content='space-between'
+          cdkMenuItem *abpPermission="grandson.requiredPolicy" [routerLinkActiveOptions]="{ exact: true }"
+          routerLinkActive="activestyle">
+          <a mat-list-item class="">
+            <span>{{ grandson.name | abpLocalization }}</span>
+          </a>
+        </button>
+      </div>
+    </div>
+  </ng-template> -->

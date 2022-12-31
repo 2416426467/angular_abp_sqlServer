@@ -1,0 +1,29 @@
+<span class="example-pizza-party" [className]="snackBarRef.containerInstance.snackBarConfig.data.type">
+    <!-- {{snackBarRef.containerInstance.snackBarConfig.data.type}} -->
+    {{snackBarRef.containerInstance.snackBarConfig.data.message}}
+    <!-- {{('AbpIdentity::'+snackBarRef.containerInstance.snackBarConfig.data.message||'')|abpLocalization}} -->
+</span>
+
+<!-- 
+import { MatSnackBar } from '@angular/material/snack-bar'; // 快餐栏
+
+constructor(
+    private _snackBar: MatSnackBar,
+) { }
+
+
+durationInSeconds:number=2.5;//文本提示消失时间
+
+
+this._snackBar.openFromComponent(SnackBarComponent, {
+    data: {
+        message: "Success fully Saved",
+        type:'warn',//success,warn
+    },
+    duration: _that.durationInSeconds * 1000,
+    horizontalPosition: 'center',
+    verticalPosition: 'top'
+});
+
+
+-->

@@ -1,0 +1,521 @@
+.organization-box {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: flex-start;
+  padding: 20px;
+  background: #f6f6f6;
+
+  .units_tree_box {
+    // background-color: #f22;
+    flex: 1;
+    min-width: 120px;
+    height: 100%;
+    background-color: #fff;
+    border: 1px solid #d2d2d2;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-right: 20px;
+
+    .unit_tree_header {
+      width: 100%;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 8px;
+      border-bottom: .1px solid #d2d2d2;
+      h4 {
+        margin-bottom: 0;
+      }
+    }
+
+    .units_tree_body {
+      width: 100%;
+      height: calc(100% - 60px);
+      // overflow: auto;
+    }
+  }
+
+  .units_table_box {
+    // background-color: rgb(219, 133, 21);
+    flex: 2.5;
+    height: 100%;
+    background-color: #fff;
+    border: .1px solid #d2d2d2;
+    overflow: hidden;
+    border-radius: 8px;
+    .units_table_header{
+      width: 100%;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 8px;
+      border-bottom: .1px solid #d2d2d2;
+      h5{
+        margin-bottom: 0;
+      }
+    }
+   
+  }
+
+
+
+}
+
+// 树
+.example-tree {
+  width: fit-content;
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+}
+.example-tree-invisible {
+  display: none;
+}
+
+/*
+ * This padding sets alignment of the nested nodes.
+ */
+.example-tree .mat-nested-tree-node div[role='group'] {
+  padding-left: 40px;
+}
+
+/*
+ * Padding for leaf nodes.
+ * Leaf nodes need to have padding so as to align with other non-leaf nodes
+ * under the same parent.
+ */
+
+.example-tree ul,
+.example-tree li {
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style-type: none;
+}
+
+.example-tree-node {
+  display: block;
+  white-space: nowrap;
+  position: relative;
+  line-height: 36px;
+
+  .dragboxes {
+    display: flex;
+    align-items: center;
+    min-width: 300px;
+
+    button[mat-icon-button] {
+      width: 36px;
+      height: 36px;
+      line-height: 36px;
+    }
+  }
+
+  .buttonbox {
+    position: relative;
+    width: calc(100% - 40px - 20px);
+    z-index: 3;
+
+    .buttonboxcon {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 4px;
+    }
+  }
+
+  button[button-text]:hover,
+  .mat-button-icon-mirror[button-icon]:hover {
+    background-color: #ededed;
+  }
+
+  button[button-text],
+  .mat-button-icon-mirror[button-icon] {
+    height: 36px;
+    line-height: 36px;
+    padding: 0 8px;
+    min-width: 36px;
+  }
+
+  .mat-button-icon-mirror[button-icon] {
+    display: inline-block;
+    border-radius: 4px;
+    overflow: visible;
+    width: 36px;
+    text-align: center;
+    transform: rotate(90deg);
+    font-size: 20px;
+  }
+
+  .buttonactive {
+    // background-color: #5c636a !important;
+    background-color: var(--ang-ux-primary-color) !important;
+    color: #fff !important;
+
+    button[button-text]:hover,
+    .mat-button-icon-mirror[button-icon]:hover {
+      background-color: var(--ang-ux-primary-color) !important;
+      // background-color: #535a60 !important;
+    }
+  }
+}
+
+.example-tree-node .example-tree-node {
+  // padding-left: 40px;
+  white-space: nowrap;
+}
+//   子集区域
+.dragchildren {
+  border: 1px solid transparent;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  border-radius: 3px;
+}
+
+.dragchildren.dragchildrenhover {
+  border: 1px solid var(--ang-ux-primary-color);
+  // 
+}
+
+//   同级
+.dragsibling {
+  position: absolute;
+  width: 100%;
+  bottom: -12px;
+  height: 12px;
+  background: transparent;
+  z-index: 1;
+
+  div {
+    width: 100%;
+    height: 4px;
+    border-radius: 3px;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+  }
+}
+
+.dragsibling.dragsiblinghover::after {
+  content: '';
+  width: 100%;
+  height: 4px;
+  border-radius: 3px;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  background-color: var(--ang-ux-primary-color);
+}
+// 树end
+
+
+
+
+/* 旧 */
+.organization_box {
+
+  width: 100%;
+  height: 100%;
+
+  h4 {
+    margin-bottom: 0;
+  }
+
+  .page_title {
+    width: 100%;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    padding: 0px 16px;
+    border-bottom: 1px dashed #ccc;
+
+    // background-color: var(--b-primary-color);
+    div {
+      flex: 1;
+    }
+
+    .page_title_right {
+      text-align: right;
+    }
+  }
+
+  .page_content {
+    width: 100%;
+    // height: calc(100vh - 60px - 64px - 20px - 20px);
+    height: calc(100% - 60px);
+    min-height: 330px;
+    padding: 10px 16px;
+    background-color: #fff;
+    display: flex;
+    align-items: flex-start;
+
+    .tree_box {
+      flex: 1;
+      height: 100%;
+      min-width: 120px;
+      position: relative;
+
+      .treebox_add {
+        position: absolute;
+        top: 0;
+        left: 0;
+        margin: 0;
+      }
+
+      .treebox_con {
+        overflow: auto;
+        height: calc(100% - 30px - 45px);
+        margin-top: 45px;
+
+        .example-tree {
+          width: fit-content;
+        }
+      }
+
+      // 树
+      .example-tree {
+        width: fit-content;
+      }
+      .example-tree-invisible {
+        display: none;
+      }
+
+      /*
+       * This padding sets alignment of the nested nodes.
+       */
+      .example-tree .mat-nested-tree-node div[role='group'] {
+        padding-left: 40px;
+      }
+
+      /*
+       * Padding for leaf nodes.
+       * Leaf nodes need to have padding so as to align with other non-leaf nodes
+       * under the same parent.
+       */
+
+      .example-tree ul,
+      .example-tree li {
+        margin-top: 0;
+        margin-bottom: 0;
+        list-style-type: none;
+      }
+
+      .example-tree-node {
+        display: block;
+        white-space: nowrap;
+        position: relative;
+        line-height: 36px;
+
+        .dragboxes {
+          display: flex;
+          align-items: center;
+          min-width: 300px;
+
+          button[mat-icon-button] {
+            width: 36px;
+            height: 36px;
+            line-height: 36px;
+          }
+        }
+
+        .buttonbox {
+          position: relative;
+          width: calc(100% - 40px - 20px);
+          z-index: 3;
+
+          .buttonboxcon {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 4px;
+          }
+        }
+
+        button[button-text]:hover,
+        .mat-button-icon-mirror[button-icon]:hover {
+          background-color: #ededed;
+        }
+
+        button[button-text],
+        .mat-button-icon-mirror[button-icon] {
+          height: 36px;
+          line-height: 36px;
+          padding: 0 8px;
+          min-width: 36px;
+        }
+
+        .mat-button-icon-mirror[button-icon] {
+          display: inline-block;
+          border-radius: 4px;
+          overflow: visible;
+          width: 36px;
+          text-align: center;
+          transform: rotate(90deg);
+          font-size: 20px;
+        }
+
+        .buttonactive {
+          // background-color: #5c636a !important;
+          background-color: var(--ang-ux-primary-color) !important;
+          color: #fff !important;
+
+          button[button-text]:hover,
+          .mat-button-icon-mirror[button-icon]:hover {
+            background-color: var(--ang-ux-primary-color) !important;
+            // background-color: #535a60 !important;
+          }
+        }
+      }
+
+      .example-tree-node .example-tree-node {
+        // padding-left: 40px;
+        white-space: nowrap;
+      }
+
+      //   子集区域
+      .dragchildren {
+        border: 1px solid transparent;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        border-radius: 3px;
+      }
+
+      .dragchildren.dragchildrenhover {
+        border: 1px solid var(--ang-ux-primary-color);
+        // 
+      }
+
+      //   同级
+      .dragsibling {
+        position: absolute;
+        width: 100%;
+        bottom: -12px;
+        height: 12px;
+        background: transparent;
+        z-index: 1;
+
+        div {
+          width: 100%;
+          height: 4px;
+          border-radius: 3px;
+          position: absolute;
+          top: 50%;
+          left: 0;
+          transform: translateY(-50%);
+        }
+      }
+
+      .dragsibling.dragsiblinghover::after {
+        content: '';
+        width: 100%;
+        height: 4px;
+        border-radius: 3px;
+        position: absolute;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+        background-color: var(--ang-ux-primary-color);
+      }
+    }
+
+    /* 列表 */
+    .crew_list {
+      flex: 2.5;
+      // height: calc(100vh - 60px - 64px - 20px - 20px - 20px);
+      height: calc(100% - 30px);
+      min-height: 300px;
+      width: 100%;
+      overflow: auto;
+
+      .crew_list_box {
+        width: 100%;
+        height: 100%;
+        border: 1px solid #dbdbdb;
+        border-radius: 5px;
+        overflow: hidden;
+
+        .crew_list_container {
+          width: 100%;
+          height: calc(100% - 60px);
+          overflow: auto;
+
+          table {
+            width: 100%;
+            height: 100%;
+
+            .mat-row .mat-cell {
+              cursor: pointer;
+            }
+
+            .mat-row:hover .mat-cell {
+              background-color: #ebebeb;
+            }
+
+            .mat-column-operate {
+              width: 240px;
+              text-align: center;
+              font-weight: bold;
+
+              button {
+                margin-left: 10px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+
+}
+
+/* 弹窗 */
+::ng-deep.modals_libbody {
+  width: 100%;
+  position: relative;
+  height: 100%;
+
+  // background-color: #f22;
+  .modals_search {
+    position: absolute;
+    top: 1px;
+    right: 0;
+    // width: 36px;
+    min-width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  // .modals_search:active{
+  //   transform: translate(1px,1px);
+  // }
+
+
+}
+
+.pagelateunit_inputname {
+  width: 100%;
+  padding: 8px 16px;
+
+  .inputname_label {
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+}
+
+hr {
+  margin: 0 auto;
+}

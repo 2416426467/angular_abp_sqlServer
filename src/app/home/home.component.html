@@ -1,0 +1,9 @@
+<div class="container">
+
+    <form #dyform="ngForm" class="dyform_form_box" [formGroup]="formgroup">
+        <lib-dynamic-form [_formgroup]="formgroup" [_formdata]="formdata"></lib-dynamic-form>
+    </form>
+    <button mat-button [disabled]="!formgroup.valid" (click)="OnSaveSubmit(dyform)">搜索</button>
+    
+
+</div>

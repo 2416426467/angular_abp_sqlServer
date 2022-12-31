@@ -1,0 +1,197 @@
+<mat-tree tree [dataSource]="dataSource" [treeControl]="treeControl" class="example-tree">
+    <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
+        <div class="mat-tree-node">
+            <button mat-icon-button class="tree_select" disabled></button>
+            <mat-checkbox *ngIf="TreeConfig.ischecked" class="tree_checkbox" color="primary"></mat-checkbox>
+            <div class="tree_content" [draggable]="TreeConfig.isdrop" [node]="node">
+                <div class="tree_content_btn"
+                    [class.tree_select_active]="select_fork?.id === node.id && TreeConfig.isSelectShow">
+                    <button class="tree_label" [style]="TreeConfig.isInput ? 'line-height: 20px;' : ''" mat-button
+                        (click)="selectTree_label(node)">
+                        {{ node.displayName }}
+                    </button>
+                    <mat-icon *ngIf="TreeConfig.isoperate" button-icon class="tree_more" [style]="TreeConfig.isInput ? 'height: 20px;' : ''"
+                        [matMenuTriggerFor]="clickHoverMenu" [matMenuTriggerData]="{ node: node }">
+                        more_vert
+                    </mat-icon>
+                </div>
+                <!-- <div class="dragchildren" *ngIf="isdrag" style="background-color: #f22;"></div> -->
+                <div class="dragchildren" [node]="{ node: node, action: 'Inside' }" *ngIf="isdrag"></div>
+                <div class="dragsibling" [node]="{ node: node, action: 'Bottom' }" *ngIf="isdrag"></div>
+            </div>
+        </div>
+    </mat-tree-node>
+    <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
+        <div class="mat-tree-node">
+            <button mat-icon-button class="tree_select">
+                <mat-icon class="mat-icon-rtl-mirror" matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name">
+                    {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
+                </mat-icon>
+            </button>
+            <mat-checkbox *ngIf="TreeConfig.ischecked" class="tree_checkbox" color="primary"></mat-checkbox>
+            <div class="tree_content" [draggable]="TreeConfig.isdrop" [node]="node">
+                <div class="tree_content_btn"
+                    [class.tree_select_active]="select_fork?.id === node.id && TreeConfig.isSelectShow">
+                    <button class="tree_label" mat-button (click)="selectTree_label(node)" [style]="TreeConfig.isInput ? 'line-height: 20px;' : ''">
+                        {{ node.displayName }}
+                    </button>
+                    <mat-icon *ngIf="TreeConfig.isoperate" button-icon class="tree_more" [style]="TreeConfig.isInput ? 'height: 20px;' : ''"
+                        [matMenuTriggerFor]="clickHoverMenu" [matMenuTriggerData]="{ node: node }">
+                        more_vert
+                    </mat-icon>
+                </div>
+                <div class="dragchildren" [node]="{ node: node, action: 'Inside' }" *ngIf="isdrag"></div>
+                <div class="dragsibling" [node]="{ node: node, action: 'Bottom' }" *ngIf="isdrag"></div>
+            </div>
+        </div>
+        <div [class.example-tree-invisible]="!treeControl.isExpanded(node)" role="group">
+            <ng-container matTreeNodeOutlet></ng-container>
+        </div>
+    </mat-nested-tree-node>
+</mat-tree>
+
+<mat-menu #clickHoverMenu="matMenu">
+    <ng-template matMenuContent let-node="node">
+        <button mat-menu-item *ngFor="let item of node.menuslist" (click)="menusSelect(node, item)">
+            {{ item }}
+        </button>
+    </ng-template>
+</mat-menu>
+
+<!-- 
+<div class="tree_box">
+    <lib-tree [_TreeConfig]="treeconfig" (_MenusSelect)="MenusSelect($event)" (_TreeMoveOrder)="TreeMoveOrder($event)"></lib-tree>
+</div>
+
+
+.tree_box {
+    width: 360px;
+    height: 600px;
+    background-color: #f22;
+    top: 20px;
+    left: 20px;
+    position: relative;
+}
+
+import { OrganizationUnitService } from 'projects/identity/proxys/dignite/abp/identity';
+
+
+constructor(
+    private UnitService: OrganizationUnitService
+) { }
+
+UnitTree_data: any
+treeconfig: any = {
+    list: [],
+    // ischecked: true,//是否多选，暂未定义功能
+    // isoperate: true,//是否显示菜单
+    // isdrop:true,//是否可以拖动
+    //isSelectShow:true,//是否显示选中的按钮
+    // isInput:true,//是否是输入框树
+}
+
+ngOnInit(): void {
+    console.log('初始化');
+    this.getunitsList()//获取组织机构列表
+}
+
+ /* 获取组织机构列表 */
+getunitsList() {
+    this.UnitService
+        .getList({ 
+            parentId: '',
+            recursive: true,
+        })
+        .subscribe(res => {
+            res.items = this.RecurseSetlist(res.items, [{
+                menuslist: ['新建组织机构', '编辑', '删除']
+            }])
+            this.setObjectVal('treeconfig', {
+                list: res.items,
+                // ischecked: true,
+                isoperate: true,
+                isdrop:true,
+                isSelectShow:true,
+                isInput:true,//是否是输入框树
+            })
+            console.log('获取组织机构列表', this.treeconfig)
+        });
+}
+
+/* 递归·设置列表属性
+    setlist  需要递归的数组[{}]
+    addAttr 需要递归添加的内容{attr:value}
+    term 列表中用于条件判断的字段 string ,
+    //term有值
+    res.items=this.RecurseSetlist(res.items,[{
+        hasChild: true,
+        menuslist: ['新建组织机构', '编辑', '删除']//操作菜单
+    }, {
+        hasChild: false,
+        menuslist: ['删除']
+    }],'hasChild')
+    //term无值
+    res.items=this.RecurseSetlist(res.items,[{
+        hasChild: true,
+        menuslist: ['新建组织机构', '编辑', '删除']
+    }])
+  */
+    RecurseSetlist(setlist?: any, addAttr?: any, term?: any) {
+        addAttr.forEach((add_item: any, add_index: any) => {
+            setlist.forEach((set_item: any, set_index: any) => {
+            if (term) {
+                if (add_item[term] === set_item[term]) {
+                for (const key in add_item) {
+                    if (key != term) {
+                    set_item[key] = add_item[key]
+                    }
+                }
+                }
+            } else {
+                for (const key in add_item) {
+                set_item[key] = add_item[key]
+                }
+            }
+            if (set_item.children.length > 0) {
+                this.RecurseSetlist(set_item.children, addAttr, term);
+            }
+            })
+        })
+        // console.log('递归·设置列表属性', setlist)
+        return setlist
+    }
+  /* 设置对象的值 */
+setObjectVal(object: any, input: any) {
+    var aimobject = JSON.parse(JSON.stringify(this[object]))
+    for (const iterator in input) {
+        aimobject[iterator] = input[iterator]
+    }
+    this[object] = aimobject
+}
+
+  /* tree操作菜单选择 */
+    MenusSelect(event: any){
+        console.log(event,'操作菜单选择',this.treeconfig)
+
+    }
+  /* tree项拖动事件 */
+    TreeMoveOrder(event: any){
+        console.log(event,'tree项拖动事件')
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->

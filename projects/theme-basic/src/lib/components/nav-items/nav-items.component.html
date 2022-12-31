@@ -1,0 +1,34 @@
+<!-- 顶部操作栏右侧导航按钮 -->
+
+<ul class="navbar-nav-material" *ngIf="true">
+  <ng-container>
+    <ng-container>
+      <li class="nav-material-item">
+        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+          <mat-icon>format_color_fill</mat-icon>
+          <!-- <mat-icon role="img" class="mat-icon notranslate material-icons mat-icon-no-color" aria-hidden="true" data-mat-icon-type="font"></mat-icon> -->
+        </button>
+        
+        <mat-menu #menu="matMenu" xPosition="before">
+          <button mat-menu-item *ngFor="let item of styleList" class="styleitem" (click)="bindchoosestyle(item)">
+            <mat-icon  [style.color]="item.selcolor">{{item.icon}}</mat-icon>
+            <span style="flex-grow: 2;">{{item.stylename}}</span>
+            <mat-icon class="maticonchild2" [style.color]="item.stylename===StyleControltype?item.selcolor:''">{{item.stylename===StyleControltype?'adjust':'panorama_fish_eye'}}</mat-icon>
+          </button>
+        </mat-menu>
+      </li>
+    </ng-container>
+  </ng-container>
+  <ng-container *ngFor="let item of navItems.items$ | async; trackBy: trackByFn">
+    <ng-container *ngIf="item.visible && item.visible()">
+      <li class="nav-material-item" *abpPermission="item.requiredPolicy">
+        <ng-container *ngIf="item.component; else htmlTemplate" [ngComponentOutlet]="item.component"
+          [ngComponentOutletInjector]="item | toInjector"></ng-container>
+        <ng-template #htmlTemplate>
+          <div [innerHTML]="item.html" (click)="item.action ? item.action() : null"></div>
+        </ng-template>
+        {{item.html}}
+      </li>
+    </ng-container>
+  </ng-container>
+</ul>

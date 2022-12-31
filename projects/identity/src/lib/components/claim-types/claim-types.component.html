@@ -1,0 +1,47 @@
+<div class="page_title">
+	<div class="page_title_left">
+		<h4>{{ 'AbpIdentity::ClaimTypes' | abpLocalization }}</h4>
+	</div>
+	<div class="page_title_right">
+		<button mat-raised-button class="" styles="primary" (click.stop)="openAddClaimDialog('NewClaimType')">
+			<mat-icon>add</mat-icon>
+			<span>NewClaimTypes</span>
+		</button>
+	</div> 
+</div>
+<div class="roles_body">
+	<div class="roles_form">
+		<form #dyform="ngForm" class="roles_form_box">
+			<lib-dynamic-form [_formgroup]="formgroup" [_formdata]="formdata"></lib-dynamic-form>
+			<button class="roles_search" mat-button color="accent"
+				[disabled]="formgroup ===null? false : !formgroup.valid" (click)="searchbtn()">
+				<mat-icon>search</mat-icon>
+			</button>
+		</form> 
+	</div>
+	<div class="roles_table" style="height: calc(100% - 50px);">
+		<lib-table  [Settable]="Setclaimtable" (Paginatorchange)="pageworkerchange($event)"
+			(tableoperateway)="tableoperateway($event)" (SelectTheTable)="SelectTheTable($event)">
+		</lib-table>
+	</div>
+</div>
+
+<lib-modals [ModalConfig]="modalconfig" (closeway)="closemodals($event)">
+	<ng-template #libHeader let-dialogRef>
+		<h4>{{modalconfig.title===undefined||modalconfig.title===null?'': 'AbpIdentity::'+modalconfig.title||'' | abpLocalization }}{{modalconfig.operatemess?'-'+modalconfig.operatemess[0].name:''}}</h4>
+	</ng-template>
+	<ng-template #libbody let-dialogRef>
+		<div class="modals_libbody">
+			<form #dyform="ngForm" class="dyform_form_box" [formGroup]="modalformgroup">
+				<lib-dynamic-form [_formgroup]="modalformgroup" [_formdata]="modalformdata"></lib-dynamic-form>
+			</form>
+		</div>
+	</ng-template>
+	<ng-template #libFooter let-dialogRef>
+		<mat-dialog-actions>
+			<button mat-stroked-button (click)="dialogRef.close()">{{ 'AbpIdentity::Cancel' | abpLocalization }}</button>
+			<button mat-raised-button color="accent" [disabled]="!modalformgroup.valid"
+				(click)="OnSaveSubmit(dialogRef)">{{ 'AbpIdentity::Save' | abpLocalization }}</button>
+		</mat-dialog-actions>
+	</ng-template>
+</lib-modals>

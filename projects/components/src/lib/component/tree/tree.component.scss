@@ -1,0 +1,137 @@
+.example-tree-invisible {
+    display: none;
+}
+
+.example-tree ul,
+.example-tree li {
+    margin-top: 0;
+    margin-bottom: 0;
+    list-style-type: none;
+}
+
+/*
+   * This padding sets alignment of the nested nodes.
+   */
+.example-tree .mat-nested-tree-node div[role=group] {
+    padding-left: 20px;
+}
+
+/*
+   * Padding for leaf nodes.
+   * Leaf nodes need to have padding so as to align with other non-leaf nodes
+   * under the same parent.
+   */
+// .example-tree div[role=group]>.mat-tree-node {}
+
+.mat-tree-node {
+    min-height: 36px !important;
+   
+
+    .tree_checkbox {
+        margin-right: 5px;
+    }
+
+    .tree_content {
+        display: flex;
+        align-items: center;
+        position: relative;
+        width: calc(100% - 40px - 20px - 20px );
+        .tree_content_btn{
+            display: flex;
+            align-items: center;
+            border-radius: 4px;
+        }
+        .tree_label {
+            text-align: left;
+            padding: 0 8px;
+            min-width: 30px;
+            line-height: 30px;
+            border-radius: 4px 0px 0px 4px;
+        }
+
+        .tree_label:hover,
+        .tree_more:hover {
+            background: var(--button-hover-color);
+        }
+
+        .tree_more {
+            text-align: left;
+            width: 24px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            border-radius: 0px 4px 4px 0px;
+            font-size: 20px;
+            // background-color: #f22;
+        }
+
+        //   子集区域
+        .dragchildren {
+            border: 1.5px solid transparent;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            border-radius: 3px;
+        }
+
+        .dragchildren.dragchildrenhover {
+            border: 1.5px solid var(--ang-ux-primary-color);
+            // 
+        }
+
+        //   同级
+        .dragsibling {
+            position: absolute;
+            width: 100%;
+            bottom: -9px;
+            height: 12px;
+            background: transparent;
+            z-index: 1;
+
+            div {
+                width: 100%;
+                height: 4px;
+                border-radius: 3px;
+                position: absolute;
+                top: 50%;
+                left: 0;
+                transform: translateY(-50%);
+            }
+        }
+
+        .dragsibling.dragsiblinghover::after {
+            content: '';
+            width: 100%;
+            height: 4px;
+            border-radius: 3px;
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            background-color: var(--ang-ux-primary-color);
+        }
+    }
+
+    .tree_select_active {
+        background: var(--ang-ux-primary-color);
+        color: var(--ang-ux-primary-text-color);
+    }
+}
+
+.mat-icon-button {
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+}
+
+.mat-menu-item {
+    height: 36px;
+    line-height: 36px;
+}
+
+.mat-menu-item:hover {
+    background: var(--button-hover-color) !important;
+}

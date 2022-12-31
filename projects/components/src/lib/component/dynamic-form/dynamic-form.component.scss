@@ -1,0 +1,158 @@
+.dyform_form_box {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  .dyform_form_items {
+    width: 100%;
+    margin-bottom: 10px;
+
+    .dyform_input_box {
+      width: 100%;
+
+      .dyform_input_con {
+        .dyform_input_label {
+          font-size: 16px;
+          margin-bottom: 10px;
+        }
+
+        .dyform_input {
+          position: relative;
+
+          input {
+            display: block;
+            width: 100%;
+            padding: 0.375rem 0.75rem;
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #212529;
+            background-color: #fff;
+            background-clip: padding-box;
+            border: 1px solid #ced4da;
+            -webkit-appearance: none;
+            appearance: none;
+            border-radius: 0.375rem;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+          }
+
+          input:focus {
+            color: #212529;
+            background-color: #fff;
+            border-color: var(--ang-input-focus-border-color);
+            outline: 0;
+            box-shadow: 0 0 0 0.25rem var(--ang-input-focus-shadow-color);
+          }
+
+          input[readonly='true'] :focus {
+            border: 1px solid #ced4da;
+            box-shadow: none !important;
+          }
+
+          .dyform_operate {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            right: 10px;
+            display: flex;
+            align-items: center;
+          }
+
+          .dyform_close {
+            color: #666666;
+          }
+
+          .dyform_icon:active {
+            transform: translate(1px, 1px);
+          }
+
+          .dyform_icon+.dyform_icon {
+            margin-left: 8px;
+          }
+
+          .dyform_eye {
+            color: #6e6e6e;
+          }
+          
+
+        }
+
+        .dyform_checkbox {
+          .example_margin {
+            display: block;
+            padding: 5px 0;
+          }
+        }
+
+        .dyform_radio {
+          .example_margin {
+            display: block;
+            padding: 5px 0;
+          }
+        }
+
+        .dyform_increase {
+          .increase_table{
+            width: 100%;
+            .mat-header-cell {
+              font-weight: bold;
+            }
+            .mat-header-cell{
+              width: 50%;
+            }
+            .mat-header-cell:last-child{
+              width: 40px;
+            }
+            .increase_td,.increase_th{
+              padding: 10px;
+            }
+          }
+
+        }
+        .dyform_select{
+          border: 1px solid #ced4da;
+          padding: 0.375rem 0.75rem;
+          border-radius: 0.375rem;
+        }
+
+
+      }
+
+      .input_errors {
+        margin-top: 5px;
+        font-size: 12px;
+        color: #f22;
+      }
+
+
+
+
+    }
+  }
+}
+
+::ng-deep input.ng-invalid.ng-dirty {
+  border-color: rgb(249, 128, 128) !important;
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem #ff222240 !important;
+}
+
+// ::ng-deep .mat-select {
+//   border: 1px solid #ced4da;
+//   padding: 0.375rem 0.75rem;
+//   border-radius: 0.375rem;
+// }
+::ng-deep.mat-menu-panel{
+  max-width: none !important;
+}
+.tree_box {
+  width: 660px;
+  // height: 600px;
+  background-color: #f22;
+  top: 20px;
+  left: 20px;
+  position: relative;
+}
+
+

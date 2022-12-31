@@ -1,0 +1,52 @@
+::ng-deep .modals_box {
+  display: block;
+  background: #fff;
+  border-radius: 8px;
+  padding: 0px 0px 0px;
+  // height: 100%;
+  // max-height: 100%;
+
+   .modals_header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 16px;
+    border-bottom: 1px solid #dbdbdb;
+    h4 {
+        margin: 0 ;
+      }
+  }
+  .modals_body{
+    width: 100%;
+    padding: 20px;
+    max-height: 66vh;
+    // height: calc(100% - 50px - 50px);
+    overflow: auto;
+
+    .pagelateunit_inputname {
+      width: 100%;
+      padding: 8px 16px;
+      .inputname_label {
+        font-size: 16px;
+        margin-bottom: 8px;
+      }
+    }
+  }
+
+  
+  .modals_footer{
+    padding: 8px 16px ;
+    border-top: 1px solid #dbdbdb;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    button + button {
+        margin-left: 8px;
+      }
+  }
+
+
+}
+

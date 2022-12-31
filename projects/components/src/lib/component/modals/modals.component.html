@@ -1,0 +1,104 @@
+<ng-template #modalContent let-modals>
+    <div class="modals_box">
+        <div *ngIf="libHeader" id="modals_header" class="modals_header">
+            <ng-container class="modals_container" [ngTemplateOutlet]="libHeader"
+                [ngTemplateOutletContext]="{ $implicit: dialogRef }"></ng-container>
+            <mat-icon (click)="dialogRef.close()">close</mat-icon>
+        </div>
+        <div *ngIf="libbody" id="modals_body" class="modals_body"
+            [style]="'height: calc('+this._ModalConfig.setheight+' - 50px - 50px);'">
+            <ng-container [ngTemplateOutlet]="libbody"></ng-container>
+             <!-- 删除提示信息 -->
+             <div class="pagelateunit_inputname" *ngIf="_ModalConfig.status === 'delete'">
+                <label class="inputname_label">
+                    <mat-icon style="font-size: 60px; height: auto; width: auto; color: #6c757d">help</mat-icon>
+                </label>
+                <div class="">
+                    {{ _ModalConfig.delectlabel||'Deletion Confirmation Message' }}
+                </div>
+            </div>
+        </div>
+        <div *ngIf="libFooter" id="modals_footer" class="modals_footer">
+            <ng-container [ngTemplateOutlet]="libFooter" [ngTemplateOutletContext]="{ $implicit: dialogRef }">
+            </ng-container>
+        </div>
+        <input type="text" cdkFocusInitial style="position: absolute;z-index: -1;opacity: 0;">
+    </div>
+</ng-template>
+
+<!-- 
+
+html：
+<lib-modals [ModalConfig]="modalconfig"  (closeway)="closemodals($event)" >
+    <ng-template #libHeader let-dialogRef>
+        <h4 >{{modalsmess.title===undefined||modalsmess.title===null?'': 'AbpIdentity::'+modalsmess.title||'' | abpLocalization }}</h4>
+    </ng-template>
+    <ng-template #libbody let-dialogRef>
+        <div class="modals_libbody">
+        </div>
+    </ng-template>
+    <ng-template #libFooter let-dialogRef>
+        <mat-dialog-actions>
+            <button mat-stroked-button (click)="dialogRef.close()">{{ 'AbpIdentity::Cancel' | abpLocalization }}</button>
+            <button mat-raised-button color="accent" [disabled]="!formgroup.valid" (click)="OnSaveSubmit(dialogRef)">{{ 'AbpIdentity::Save' | abpLocalization }}</button>
+        </mat-dialog-actions>
+    </ng-template>
+</lib-modals>
+
+
+
+ /* modal 弹窗配置 */
+modalconfig: any = {
+    ismodalopen: false,//弹窗是否显示   
+    setwidth: '35vw',//弹窗宽度
+    setheight: '',//弹窗高度
+    title: '',//弹窗标题
+    status: '',//弹窗类型，存有删除弹窗delete，表示操作的某块内容是干什么的
+    contype: '',//内容类型 表示操作的那块内容
+    delectlabel: 'Deletion Confirmation Message',//删除提示
+};
+
+
+/* 开启 modal */
+openmodals(setwidth?: any, setheight?: any) {
+    this.setObjectVal('modalconfig', {
+        ismodalopen: true,
+        setwidth: setwidth ? setwidth : '35vw',
+        setheight: setheight ? setheight : '',
+    })
+}
+/* 关闭 modal */
+closemodals(dialogRefmodal:any) {
+    if (dialogRefmodal) dialogRefmodal.close();
+    this.modalconfig = {}
+    this.setObjectVal('modalconfig', {
+        ismodalopen: false,
+    })
+}
+/* 设置对象的值 */
+setObjectVal(object: any, input: any) {
+    var aimobject = JSON.parse(JSON.stringify(this[object]))
+    for (const iterator in input) {
+        aimobject[iterator] = input[iterator]
+    }
+    this[object] = aimobject
+    // console.log(this[object],'设置对象的值')
+}
+
+  /* 表单提交 */
+OnSaveSubmit(dialogRefmodal: any) {
+    var that = this;
+
+    if (this.modalconfig.status === 'worker') {
+        if (this.modalconfig.formtype == 'delete') {
+        this.DeleteUnitUser(
+            { selectTree: this.modalconfig.selectTree, Usermessarray: this.modalsmess.Usermessarray },
+            function () {
+            that.closemodals(dialogRefmodal);
+            }
+        );
+        }
+    }
+}
+
+-->

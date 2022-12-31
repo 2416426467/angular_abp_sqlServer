@@ -1,0 +1,52 @@
+/* To learn more about this file see: https://angular.io/config/tsconfig. */
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "es2017",
+    "module": "es2020",
+    "lib": [
+      "es2018",
+      "dom"
+    ],
+    "paths": {
+      "@proxy": ["src/app/proxy/index.ts"],
+      "@proxy/*": [
+        "src/app/proxy/*"
+      ],
+      "components": [
+        "dist/components"
+      ],
+      "components/*": [
+        "dist/components/*"
+      ], 
+      "theme-basic": [
+        "dist/theme-basic"
+      ],
+    
+      "theme-basic/*": [
+        "dist/theme-basic/*"
+      ],
+      "identity": [
+        "dist/identity" 
+      ],
+      
+      // "theme-shared": [
+      //   "dist/theme-shared"
+      // ],
+      // "@abp/ng.theme.basic": ["projects/theme-basic/src/public-api.ts"],
+      // "@abp/ng.identity": ["projects/identity/config/src/public-api.ts"],
+      // "@abp/ng.theme-shared": ["projects/theme-shared/src/public-api.ts"], 
+    }
+  },
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false
+  }
+}

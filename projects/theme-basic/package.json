@@ -1,0 +1,22 @@
+{
+  "name": "@dignite-ng/theme-basic",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/abpframework/abp.git"
+  },
+  "peerDependencies": {
+    "@angular/common": "^14.1.0",
+    "@angular/core": "^14.1.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0",
+    "@abp/ng.account.core": "~5.3.4",
+    "@abp/ng.theme.shared": "~5.3.4",
+    "@abp/ng.core": "~5.3.4",
+    "@angular/material": "^14.2.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

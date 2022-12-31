@@ -1,0 +1,93 @@
+<div class="page_title">
+	<div class="page_title_left">
+		<!-- <h5 class="card-title">{{ 'AbpIdentity::UserName' | abpLocalization }}</h5> -->
+		<h5 class="card-title">{{ 'AbpIdentity::Users' | abpLocalization }}</h5>
+	</div>
+	<div class="page_title_right">
+		<button mat-raised-button class="" color="accent" (click)="openAddUsersDialog('NewUser')">
+			<mat-icon>add</mat-icon>
+			<span>{{'AbpIdentity::NewUser'|abpLocalization}}</span>
+		</button>
+	</div>
+</div>
+<div class="roles_body">
+	<div class="roles_form">
+		<form #dyform="ngForm" class="roles_form_box">
+			<lib-dynamic-form [_formgroup]="formgroup" [_formdata]="formdata"></lib-dynamic-form>
+			<button class="roles_search" mat-button color="accent"
+				[disabled]="formgroup ===null? false : !formgroup.valid" (click)="searchbtn()">
+				<mat-icon>search</mat-icon>
+			</button>
+		</form>
+	</div>
+	<div class="roles_table" style="height: calc(100% - 50px);">
+		<lib-table [Settable]="SetUsersTable" (Paginatorchange)="pageworkerchange($event)"
+			(tableoperateway)="tableoperateway($event)" (SelectTheTable)="SelectTheTable($event)">
+		</lib-table>
+	</div>
+</div>
+
+<lib-modals [ModalConfig]="modalconfig" (closeway)="closemodals($event)">
+	<ng-template #libHeader let-dialogRef>
+		<!-- <h4>{{modalconfig.title||''}}</h4> -->
+		<h4>{{modalconfig.title===undefined||modalconfig.title===null?'': 'AbpIdentity::'+modalconfig.title||'' | abpLocalization }}{{modalconfig.operatemess?'-'+modalconfig.operatemess[0].userName:''}}
+		</h4>
+	</ng-template>
+	<ng-template #libbody let-dialogRef>
+		<div class="modals_libbody">
+			
+			
+			
+
+			<ng-container *ngIf="modalconfig.status==='AddUsers'||modalconfig.status==='UpdateUsers'">
+				<mat-tab-group  mat-align-tabs="start" color="accent" >
+					<mat-tab  [label]="'AbpIdentity::UserInformations'|abpLocalization">
+						<form #dyform="ngForm" class="dyform_form_box" [formGroup]="modalformgroup">
+							<lib-dynamic-form [_formgroup]="modalformgroup" [_formdata]="modalformdata"></lib-dynamic-form>
+						</form>
+					</mat-tab>
+					<mat-tab  [label]="'AbpIdentity::Roles'|abpLocalization">
+						<div class="dyform_checkbox">
+							<mat-checkbox class="example_margin" 
+								*ngFor="let check of rolesgroup; let i = index" (change)="checkboxchange($event,check)" [checked]="check.ischeck">
+								{{ 'AbpIdentity::' + check.diaplayname | abpLocalization }}</mat-checkbox>
+						</div>
+	
+					</mat-tab>
+				</mat-tab-group>
+			</ng-container>
+			<ng-container *ngIf="modalconfig.status==='Claimsval'">
+				<lib-add-minus-form [_formgroup]="addminusformgroup"
+					[_AddMinusConfig]="addminusconfig"></lib-add-minus-form>
+			</ng-container>
+			<ng-container *ngIf="modalconfig.status==='LockUsers'||modalconfig.status==='SetPassword'||modalconfig.status==='SetTwoFactorEnabled'">
+				<form #dyform="ngForm" class="dyform_form_box" [formGroup]="modalformgroup">
+					<lib-dynamic-form [_formgroup]="modalformgroup" [_formdata]="modalformdata"></lib-dynamic-form>
+				</form>
+			</ng-container>
+		</div>
+	</ng-template>
+	<ng-template #libFooter let-dialogRef>
+		<mat-dialog-actions>
+			<button mat-stroked-button (click)="dialogRef.close()">{{ 'AbpIdentity::Cancel' | abpLocalization
+				}}</button>
+				<!-- [disabled]="!modalformgroup.valid" -->
+			<button mat-raised-button color="accent"  (click)="OnSaveSubmit(dialogRef)">{{
+				'AbpIdentity::Save' | abpLocalization }}</button>
+		</mat-dialog-actions>
+	</ng-template>
+</lib-modals>
+
+<abp-permission-management #abpPermissionManagement="abpPermissionManagement" *abpReplaceableTemplate="
+    {
+		inputs: {
+		providerName: { value: 'U' },
+		providerKey: { value: providerKey },
+		visible: { value: visiblePermissions, twoWay: true }
+		},
+		outputs: { visibleChange: onVisiblePermissionChange },
+		componentKey: permissionManagementKey
+    };
+    let init = initTemplate
+	" (abpInit)="init(abpPermissionManagement)">
+</abp-permission-management>

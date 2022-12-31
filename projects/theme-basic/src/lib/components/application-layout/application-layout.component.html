@@ -1,0 +1,66 @@
+<!-- <nav>
+  <mat-toolbar class="styleheadtoolbar " color="primary" [ngStyle]="{'height':'64px'}">
+    <button mat-icon-button (click)="sidebartoggle(service.smallScreen,drawer)" class="example-icon"
+      aria-label="Example icon-button with menu icon">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <span *ngIf="!service.smallScreen">
+      <abp-logo *abpReplaceableTemplate="{ componentKey: service.logoComponentKey }"></abp-logo>
+    </span>
+    <span class="example-spacer"></span>
+    <abp-nav-items *abpReplaceableTemplate="{ componentKey: service.navItemsComponentKey}"
+      [StyleControltype]="StyleControl" (choosestyle)="bindchoosestyle($event)"></abp-nav-items>
+  </mat-toolbar>
+</nav>
+<mat-drawer-container class="material_container " style="height:calc(100vh - 64px);display: none;">
+  <mat-drawer #drawer [opened]="!service.smallScreen" class="example-sidenav  styledrawer"
+    [ngClass]="{'transitonstyle':!service.smallScreen}" mode="side"
+    [ngStyle]="{'width':service.smallScreen?'100%':!iswidebar?setwidth1:setwidth2}">
+    <abp-routes [issideicon]="issideicon" [smallScreen]="service.smallScreen" (togglebarnav)="togglebarnav(drawer)">
+    </abp-routes>
+  </mat-drawer>
+  <mat-drawer-content class="example-sidenav-content styledrawercontent"
+    [ngClass]="{'transitonstyle':!service.smallScreen}"
+    [ngStyle]="{'margin-left':service.smallScreen?'100%':!iswidebar?setwidth1:setwidth2}">
+    <div class="material_content">
+      <router-outlet #outlet="outlet"></router-outlet>
+      <lib-shortcutmenu *ngIf="false"></lib-shortcutmenu>
+    </div>
+  </mat-drawer-content>
+</mat-drawer-container> -->
+
+<section class="layout_root">
+  <header class="layout_header">
+    <nav class="layout_nav">
+      <mat-toolbar class="styleheadtoolbar " color="primary" >
+        <button mat-icon-button class="example-icon" (click)="sidebartoggle(service.smallScreen,drawer)" aria-label="Example icon-button with menu icon">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <span *ngIf="!service.smallScreen">
+          <abp-logo *abpReplaceableTemplate="{ componentKey: service.logoComponentKey }"></abp-logo>
+        </span>
+        <span class="example-spacer"></span>
+        <abp-nav-items *abpReplaceableTemplate="{ componentKey: service.navItemsComponentKey}"
+          [StyleControltype]="StyleControl" (choosestyle)="bindchoosestyle($event)"></abp-nav-items>
+      </mat-toolbar>
+    </nav>
+  </header>
+  <section class="layout_drawer_container" >
+    <mat-drawer-container class="material_container " >
+      <mat-drawer #drawer [opened]="!service.smallScreen" class="example-sidenav  styledrawer"
+        [ngClass]="{'transitonstyle':!service.smallScreen}" mode="side"
+        [ngStyle]="{'width':service.smallScreen?'100%':!iswidebar?setwidth1:setwidth2}">
+        <abp-routes [issideicon]="issideicon" [smallScreen]="service.smallScreen" (togglebarnav)="togglebarnav(drawer)">
+        </abp-routes>
+      </mat-drawer>
+      <mat-drawer-content class="example-sidenav-content styledrawercontent"
+        [ngClass]="{'transitonstyle':!service.smallScreen}"
+        [ngStyle]="{'margin-left':service.smallScreen?'100%':!iswidebar?setwidth1:setwidth2}">
+        <div class="material_content">
+          <router-outlet #outlet="outlet"></router-outlet>
+          <lib-shortcutmenu *ngIf="false"></lib-shortcutmenu>
+        </div>
+      </mat-drawer-content>
+    </mat-drawer-container>
+  </section>
+</section>

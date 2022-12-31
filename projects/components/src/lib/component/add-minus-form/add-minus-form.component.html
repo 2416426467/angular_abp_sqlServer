@@ -1,0 +1,148 @@
+<!-- 自增加 -->
+<div class="addminus_box">
+    <table>
+        <tr>
+            <th *ngFor="let item of _AddMinusConfig.groupconfig">{{item.label}}</th>
+        </tr>
+        <tr>
+            <ng-container *ngFor="let groupitem of _AddMinusConfig.groupconfig; let i=index">
+                <td *ngIf="groupitem.type==='select'">
+                    <mat-select [(ngModel)]="groupitem.value" (selectionChange)="selectionChange($event)">
+                        <mat-option [value]="selectitem.label"
+                            *ngFor="let selectitem of _AddMinusConfig.selectOption">{{selectitem.label}}</mat-option>
+                    </mat-select>
+                </td>
+                <td *ngIf="groupitem.type==='input'">
+                    <div class="addminus_input">
+                        <input type="text" #inputdata="ngModel" [required]="groupitem.required"
+                            [pattern]="groupitem.regex" (input)="valaueinput(inputdata)"
+                            [(ngModel)]="groupitem.value" />
+                        <div class="addminus_errors"
+                            *ngIf="inputdata.invalid && (inputdata.dirty || inputdata.touched)">
+                            <ng-container *ngIf="inputdata.control.errors?.['required']">
+                                <mat-icon [matTooltip]="groupitem.selectlabel+ ' is required'">info</mat-icon>
+                            </ng-container>
+                            <ng-container *ngIf="inputdata.control.errors?.['pattern']">
+                                <mat-icon
+                                    [matTooltip]="groupitem.selectlabel+''+groupitem.RegexDescription">info</mat-icon>
+                            </ng-container>
+                        </div>
+                    </div>
+                </td>
+                <td *ngIf="groupitem.type==='operate'">
+                    <button mat-icon-button (click)="add_circle()">
+                        <mat-icon>add_circle</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+        </tr>
+        <tr *ngFor="let item of _AddMinusConfig.defaultValue;let i=index">
+            <td>
+                {{item[_AddMinusConfig.groupconfig[0].label]}}
+            </td>
+            <td>
+                {{item[_AddMinusConfig.groupconfig[1].label]}}
+            </td>
+            <td>
+                <button mat-icon-button (click)="remove_circle_outline(i)">
+                    <mat-icon>remove_circle_outline</mat-icon>
+                </button>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<!-- <button (click)="onsubmit()">提交</button> -->
+
+
+<!-- 
+import { CreateUsers, increaseUserClaim, UpdateUsers } from "../../NewDefaults/defaults-users-form-modal";
+
+// 自增配置
+export const increaseUserClaim = {
+    type: 'AddMinus',
+    name: 'claim',
+    groupconfig: [
+        {
+            label: 'claimType',
+            type: 'select',
+            value: '',
+        },
+        {
+            label: 'claimValue',
+            type: 'input',
+            value: '',
+        },
+        {
+            type: 'operate',
+        },
+    ],
+    selectOption: [],//等待选择的值
+    defaultValue: [],//默认数据
+};
+
+    addminusconfig: any
+	addminusformgroup: FormGroup
+	/* 所有claim 数据 */
+	ClaimAll: any[] = []
+
+	ngOnInit(): void {
+		
+		this.getClaimAll()
+	}
+	/* 获取所有claim */
+	getClaimAll() {
+		var _that = this
+		this.UserService.getAllClaimTypes().subscribe(res => {
+			res.items.forEach((_item: any, _index: any) => _item['label'] = _item.name)
+			_that.ClaimAll = res.items
+		})
+	}
+
+/* 列表操作方法 */
+	tableoperateway(wayval: any) {
+		this.fuweiformdata()//复位表单数据
+		switch (wayval.label) {
+            case 'Claims':
+				/* 打开权限模态框 */
+				this.setObjectVal('modalconfig', {
+					title: wayval.label,
+					status: 'Claimsval',
+					contype: 'Users',
+					UsersId: wayval.operatemess[0].id,
+					concurrencyStamp: wayval.operatemess[0].concurrencyStamp,
+					operatemess: wayval.operatemess
+				})
+				this.UserService.get(this.modalconfig.UsersId).subscribe(res => {
+					// console.log("获取指定角色信息",res)
+					let increaseClaimconst = JSON.parse(JSON.stringify(increaseUserClaim))
+					increaseClaimconst.defaultValue = res.claims
+					increaseClaimconst.selectOption = this.ClaimAll
+					this.addminusconfig = increaseClaimconst
+					this.addminusformgroup = this.setformdata([this.addminusconfig]);
+					console.log(this.addminusconfig, 'Claims', this.addminusformgroup)
+					this.openmodals('60vw')
+				})
+				break;
+		}
+	}
+
+
+    /* 模态框-确认 */
+	OnSaveSubmit(dialogRefmodal: any) {
+		var that = this;
+		if (this.modalconfig.contype === 'roles') {
+			
+			if (this.modalconfig.status == 'Claimsval') {
+				console.log('模态框-确认-Claimsval', this.addminusformgroup.value)
+				this.updateClaims(this.addminusformgroup.value.claim, function () {
+					that.getallroles(that.formgroup.value.filter);
+					that.closemodals(dialogRefmodal);
+				})
+			}
+			
+		}
+	}
+
+
+-->

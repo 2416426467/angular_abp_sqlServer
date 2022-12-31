@@ -1,0 +1,69 @@
+.example-spacer {
+  flex: 1 1 auto;
+}
+.material_container {
+  display: flex;
+  align-items: flex-start;
+  flex: 1 1 auto;
+}
+
+// 主体
+// .material_container {
+//   width: 100%;
+//   position: fixed;
+//   top: 64px;
+//   z-index: -1;
+//   left: 0;
+
+//   .example-sidenav-content {
+//     width: 100%;
+//     padding: 20px;
+//   }
+// }
+.transitonstyle {
+  transition: all 0.15s linear;
+}
+.mat-drawer-side {
+  border-right: solid 0px rgba(0, 0, 0, 0.12);
+}
+.mat-drawer-container {
+  background-color: transparent;
+}
+
+// 布局scss
+.layout_root {
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  .layout_header {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 980;
+    .layout_nav {
+      .styleheadtoolbar {
+        height: var(--b-bar-horizontal-height, auto);
+      }
+    }
+  }
+  .layout_drawer_container {
+    width: 100%;
+    height: calc(100vh - var(--b-bar-horizontal-height, auto));
+    background-color: #f22;
+    margin-top: calc(var(--b-bar-horizontal-height, auto) - 1px);
+    .material_container {
+      width: 100%;
+      height: 100%;
+      .example-sidenav-content {
+        width: 100%;
+        .material_content {
+          width: 100%;
+          height: 100%;
+        }
+      }
+    }
+  }
+}

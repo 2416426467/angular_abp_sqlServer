@@ -1,0 +1,78 @@
+.page_title {
+	width: 100%;
+	height: 60px;
+	display: flex;
+	align-items: center;
+	background-color: #fff;
+	padding: 0px 16px;
+	border-bottom: 1px dashed #ccc;
+
+	h4 {
+		margin-bottom: 0;
+	}
+
+	div {
+		flex: 1;
+	}
+
+	.page_title_right {
+		text-align: right;
+	}
+}
+
+::ng-deep.roles_body {
+	width: 100%;
+	padding: 20px;
+	height: calc(100% - 60px);
+	background-color: #fff;
+
+	.roles_form_box {
+		width: 100%;
+		position: relative;
+		top: 2px;
+
+		.roles_search {
+			position: absolute;
+			top: 1px;
+			right: 0;
+			// width: 36px;
+			min-width: 36px;
+			height: 36px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+	}
+
+	.roles_table {
+		height: calc(100% - 40px);
+		border-radius: 5px 5px;
+		overflow: hidden;
+	}
+}
+
+
+.mat-tab-group {
+	margin-bottom: 48px;
+}
+
+::ng-deep.mat-tab-label {
+	min-width: 90px !important;
+}
+
+::ng-deep.mat-tab-header {
+	position: sticky !important;
+	top: -20px;
+	z-index: 99;
+	background: #fff;
+}
+::ng-deep.mat-tab-body-content {
+    padding: 10px;
+}
+
+.dyform_checkbox {
+	.example_margin {
+	  display: block;
+	  padding: 5px 0;
+	}
+  }

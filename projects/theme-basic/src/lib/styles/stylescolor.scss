@@ -1,0 +1,285 @@
+@use './palette.scss';
+// 引入material自定义主题支持
+@import '~@angular/material/theming';
+// 引入material公用的主题风格
+@include mat-core();
+
+/* 
+风格控件
+StyleControl
+
+样式底色 白，蓝色，红色
+
+class="StyleControl" styles="black" 
+ styleUrls: ['./application-layout.component.scss','../colour.scss'],
+*/
+$primarycolor: null;
+// $primarycolor:#0D6EFD;
+
+
+
+body[styles='Light'] {
+  $bgorange: #ffffff; //背景主色调
+  $textorange: #000000; //字体主色调
+  $bgstyledrawer: #ffffff; //侧边栏背景色调
+  $textstyledrawer: #292d32; //侧边栏字体色调
+  $bgactivestyle: #e7e7e7; //侧边栏导航选中背景色调
+  $textactivestyle: #000; //侧边栏导航选中字体色调
+  $background: #f6f6f6; //内容框背景色调
+  $shadow: #ccc;
+  $border: #cccccc89;
+  $buttonbg: #0D6EFD;
+  $buttontext: #ffffff;
+  --ang-ux-primary-color: #{$buttonbg};
+  --ang-ux-primary-text-color: #{$buttontext};
+  --ang-ux-accent-color: #{$buttonbg}14;
+  --button-hover-color: #{$buttonbg}18;
+  --ang-input-focus-border-color: #7eb0fc;
+  --ang-input-focus-shadow-color: #0d6efd40;
+
+  // 头部工具栏
+  .styleheadtoolbar {
+    background: $bgorange;
+    color: $textorange;
+    box-shadow: -1px -14px 12px 13px $shadow;
+  }
+
+  .styledrawer {
+    background: $bgstyledrawer;
+    color: $textstyledrawer;
+    border-right: 1px solid $border;
+  }
+
+  .activestyle {
+    background-color: $bgactivestyle;
+    color: $buttonbg;
+  }
+
+  .styledrawercontent {
+    background-color: $background;
+  }
+
+  button[styles='primary'] {
+    color: $buttontext;
+    background-color: $buttonbg;
+  }
+
+  // i[styles='primary'] {
+  //   color: $buttonbg;
+  // }
+  // // 自定义颜色
+  $my-app-primary: mat-palette(palette.$Light-palette, 50); // 主色
+  $my-app-accent: mat-palette(palette.$Light-palette, 600); // 副色
+  $my-app-warn: mat-palette($mat-red); // 警告色
+  // // 利用自定义颜色组装自定义主题
+  $my-app-theme: mat-light-theme($my-app-primary, $my-app-accent, $my-app-warn);
+  // // 设置自定义主题，使其生效
+  @include angular-material-theme($my-app-theme);
+
+
+}
+
+// #25282E
+body[styles='Semi-Dark'] {
+  $bgorange: #292d32; //背景主色调
+  $textorange: #ffffff; //字体主色调
+  $bgstyledrawer: #292d32; //侧边栏背景色调
+  $textstyledrawer: #949699; //侧边栏字体色调
+  $bgactivestyle: #292d32; //侧边栏导航选中背景色调
+  $textactivestyle: #fff; //侧边栏导航选中字体色调
+  $background: #f6f6f6; //内容框背景色调
+  $shadow: #494e54;
+  $border: #292d32;
+  $buttonbg: #292d32;
+  $buttontext: #ffffff;
+  --ang-ux-primary-color: #{$buttonbg};
+  --ang-ux-primary-text-color: #{$buttontext};
+  --ang-ux-accent-color: #{$buttonbg}14;
+  --button-hover-color: #{$buttonbg}18;
+  --ang-input-focus-border-color: #767a7d;
+  --ang-input-focus-shadow-color: #292d3242;
+
+  // 头部工具栏
+  .styleheadtoolbar {
+    background: $bgorange;
+    color: $textorange;
+    box-shadow: -1px -14px 12px 13px $shadow;
+  }
+
+  // 侧边栏
+  .styledrawer {
+    background: $bgstyledrawer;
+    color: $textstyledrawer;
+    border-right: 1px solid $border;
+  }
+
+  // 侧边栏选中
+  .activestyle {
+    background-color: $bgactivestyle;
+    color: $textactivestyle;
+  }
+
+  // 内容背景
+  .styledrawercontent {
+    background-color: $background;
+  }
+
+  button[styles='primary'] {
+    color: $textorange;
+    background-color: $buttonbg;
+  }
+
+  // // 自定义颜色
+  $my-app-primary: mat-palette(palette.$Semi-Dark-palette, 500); // 主色
+  $my-app-accent: mat-palette(palette.$Semi-Dark-palette, 500); // 副色
+  $my-app-warn: mat-palette($mat-red); // 警告色
+  // // 利用自定义颜色组装自定义主题
+  $my-app-theme: mat-light-theme($my-app-primary, $my-app-accent, $my-app-warn);
+  // // 设置自定义主题，使其生效
+  @include angular-material-theme($my-app-theme);
+}
+
+/*  color="primary" */
+body[styles='Indigo'] {
+  $bgorange: #3f51b5; //背景主色调
+  $textorange: #ffffff; //字体主色调
+  $bgstyledrawer: #ffffff; //侧边栏背景色调
+  $textstyledrawer: #000000; //侧边栏字体色调
+  $bgactivestyle: #3f51b526; //侧边栏导航选中背景色调
+  $textactivestyle: #3f51b5; //侧边栏导航选中字体色调
+  $background: #f6f6f6; //内容框背景色调
+  $shadow: #a9b5fb9a;
+  $border: #dee3ffba;
+  $buttonbg: #3f51b5;
+  $buttontext: #ffffff;
+  --ang-ux-primary-color: #{$buttonbg};
+  --ang-ux-primary-text-color: #{$buttontext};
+  --ang-ux-accent-color: #{$buttonbg}14;
+  --button-hover-color: #{$buttonbg}18;
+  --ang-input-focus-border-color: #8698fa;
+  --ang-input-focus-shadow-color: #3f51b540;
+
+  // 头部工具栏
+  .styleheadtoolbar {
+    background: $bgorange;
+    color: $textorange;
+    box-shadow: -1px -14px 12px 13px $shadow;
+  }
+
+  .styledrawer {
+    background: $bgstyledrawer;
+    color: $textstyledrawer;
+    border-right: 1px solid $border;
+    box-shadow: -7px 0px 20px 1px $shadow;
+
+    .activestyle {
+      background-color: $bgactivestyle;
+      color: $textactivestyle;
+    }
+  }
+
+  .styledrawercontent {
+    background-color: $background;
+  }
+
+  button[styles='primary'] {
+    color: $textorange;
+    background-color: $buttonbg;
+  }
+
+  // 自定义颜色
+
+  $my-app-primary: mat-palette(palette.$Indigo-palette, 500); // 主色
+  $my-app-accent: mat-palette(palette.$Indigo-palette, 500); // 副色
+  $my-app-warn: mat-palette($mat-red); // 警告色
+  // // 利用自定义颜色组装自定义主题
+  $my-app-theme: mat-light-theme($my-app-primary, $my-app-accent, $my-app-warn);
+  // // 设置自定义主题，使其生效
+  @include angular-material-theme($my-app-theme);
+}
+
+
+body[styles='Deep-Purple'] {
+  $bgorange: #673ab7; //背景主色调
+  $textorange: #ffffff; //字体主色调
+  $bgstyledrawer: #ffffff; //侧边栏背景色调
+  $textstyledrawer: #000000; //侧边栏字体色调
+  $bgactivestyle: #673ab726; //侧边栏导航选中背景色调
+  $textactivestyle: #673ab7; //侧边栏导航选中字体色调
+  // $background: #e70000;//内容框背景色调
+  $background: #f6f6f6; //内容框背景色调
+  $shadow: #8e5fe03f;
+  $border: #cfb4ff86;
+  $buttonbg: #673ab7;
+  $buttontext: #ffffff;
+  --ang-ux-primary-color: #{$buttonbg};
+  --ang-ux-primary-text-color: #{$buttontext};
+  --ang-ux-accent-color: #{$buttonbg}14;
+  --button-hover-color: #{$buttonbg}18;
+  --ang-input-focus-border-color: #b287ff;
+  --ang-input-focus-shadow-color: #673ab740;
+
+  // 头部工具栏
+  .styleheadtoolbar {
+    background: $bgorange;
+    color: $textorange;
+    box-shadow: -1px -14px 12px 13px $shadow;
+    border-bottom: 1px solid $border;
+  }
+
+  .styledrawer {
+    background: $bgstyledrawer;
+    color: $textstyledrawer;
+    border-right: 1px solid $border;
+    box-shadow: -7px 0px 20px 1px $shadow;
+  }
+
+  .styledrawercontent {
+    background-color: $background;
+  }
+
+  .activestyle {
+    background-color: $bgactivestyle !important;
+    color: $textactivestyle !important;
+  }
+
+  button[styles='primary'] {
+    color: $textorange;
+    background-color: $buttonbg;
+  }
+
+  $my-app-primary: mat-palette(palette.$Deep-Purple-palette, 500); // 主色
+  $my-app-accent: mat-palette(palette.$Deep-Purple-palette, 500); // 副色
+  $my-app-warn: mat-palette($mat-red); // 警告色
+  // // 利用自定义颜色组装自定义主题
+  $my-app-theme: mat-light-theme($my-app-primary, $my-app-accent, $my-app-warn);
+  // // 设置自定义主题，使其生效
+  @include angular-material-theme($my-app-theme);
+}
+
+/*滚动条样式*/
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+// 滑块
+::-webkit-scrollbar-thumb {
+  border-radius: 50px;
+  box-shadow: inset 0 0 5px #00000033;
+  background: #5c5c5c1a;
+}
+
+// 滑道
+::-webkit-scrollbar-track {
+  border-radius: 0;
+  box-shadow: inset 0 0 5px #00000033;
+  background: #5c5c5c1a;
+}
+
+
+
+:root {
+  --b-bar-horizontal-height: 64px; //header的nav高度
+
+}

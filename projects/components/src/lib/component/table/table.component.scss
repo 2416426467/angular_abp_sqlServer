@@ -1,0 +1,77 @@
+.crew_list_container {
+  width: 100%;
+  height: calc(100% - 60px);
+  overflow: auto;
+
+  .table_box {
+    width: 100%;
+
+    // height: 100%;
+    .mat-row .mat-cell {
+      cursor: pointer;
+    }
+
+    .mat-row:hover .mat-cell {
+      background-color: #f3f3f3;
+    }
+
+    .table_tr {
+      height: 60px !important;
+    }
+
+    .tableactive .mat-cell {
+      background: var(--ang-ux-accent-color) !important;
+    }
+
+    .table_th,
+    .table_td {
+      padding: 5px;
+      // text-align: center;
+      border-bottom: .5px solid #d6d6d6;
+    }
+    .table_th:first-child,.table_td:first-child{
+      padding-left: 20px;
+    }
+    .table_th{
+      font-weight: bold;
+      color: #383434;
+      font-size: 14px;
+    }
+
+    .mat-column-operate {
+      //   width: 240px;
+      width: 140px;
+      text-align: center;
+      white-space: nowrap;
+      font-weight: bold;
+
+      button+button {
+        margin-left: 10px;
+      }
+    }
+  }
+  
+  .notdata_box {
+    width: 100%;
+    text-align: center;
+    font-size: 25px;
+    padding: 20px 0;
+    // border-bottom: 1px solid #ccc;
+    color: #767676;
+  }
+}
+
+.example-button {
+  margin-top: 16px;
+}
+
+.mat-menu-item {
+  height: 36px;
+  line-height: 36px;
+}
+
+
+
+.crew_list_container .table_box .mat-column-operate {
+  text-align: center !important;
+}

@@ -1,0 +1,15 @@
+<lib-modals [ModalConfig]="modalconfig"  (closeway)="closemodals($event)" >
+    <ng-template #libHeader let-dialogRef>
+        <h4 >{{modalconfig.title||''}}</h4>
+    </ng-template>
+    <ng-template #libbody let-dialogRef>
+        <div class="modals_libbody">
+        </div>
+    </ng-template>
+    <ng-template #libFooter let-dialogRef>
+        <mat-dialog-actions>
+            <button mat-stroked-button (click)="dialogRef.close()">取消</button>
+            <button mat-raised-button color="accent" [disabled]="!formgroup.valid" (click)="OnSaveSubmit(dialogRef)">确认</button>
+        </mat-dialog-actions>
+    </ng-template>
+</lib-modals>
