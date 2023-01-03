@@ -13,12 +13,18 @@
 <div class="roles_body">
 	<div class="roles_form">
 		<form #dyform="ngForm" class="roles_form_box">
-			<lib-dynamic-form [_formgroup]="formgroup" [_formdata]="formdata"></lib-dynamic-form>
-			<button class="roles_search" mat-button color="accent"
-				[disabled]="formgroup ===null? false : !formgroup.valid" (click)="searchbtn()">
-				<mat-icon>search</mat-icon>
+			<button class="roles_form_boxmore" mat-button color="accent" (click)="openScreen()">
+				<mat-icon>menu</mat-icon>
 			</button>
+			<div style="width: 100%;position: relative;">
+				<lib-dynamic-form [_formgroup]="formgroup" [_formdata]="formdata"></lib-dynamic-form>
+				<button class="roles_search" mat-button color="accent"
+					[disabled]="formgroup ===null? false : !formgroup.valid" (click)="searchbtn()">
+					<mat-icon>search</mat-icon>
+				</button>
+			</div>
 		</form>
+		<ng-container *ngTemplateOutlet="screenoperate"></ng-container>
 	</div>
 	<div class="roles_table" style="height: calc(100% - 50px);">
 		<lib-table [Settable]="SetUsersTable" (Paginatorchange)="pageworkerchange($event)"
@@ -26,33 +32,46 @@
 		</lib-table>
 	</div>
 </div>
+<ng-template #screenoperate>
+	<div class="screen_box" *ngIf="isScreenShow">
+		<div class="screen_body">
+			<lib-dynamic-form [_formgroup]="screenformgroup" [_formdata]="screenformdata"></lib-dynamic-form>
+		</div>
+		<div class="screen_footer">
+			<button mat-stroked-button (click)="closeScreen()">{{ 'AbpIdentity::Cancel' | abpLocalization
+				}}</button>
+			<!-- [disabled]="!modalformgroup.valid" -->
+			<button mat-raised-button color="accent" (click)="ScreenSubmit()">{{
+				'AbpIdentity::PagerSearch' | abpLocalization }}</button>
+		</div>
+	</div>
+</ng-template>
+
 
 <lib-modals [ModalConfig]="modalconfig" (closeway)="closemodals($event)">
 	<ng-template #libHeader let-dialogRef>
 		<!-- <h4>{{modalconfig.title||''}}</h4> -->
-		<h4>{{modalconfig.title===undefined||modalconfig.title===null?'': 'AbpIdentity::'+modalconfig.title||'' | abpLocalization }}{{modalconfig.operatemess?'-'+modalconfig.operatemess[0].userName:''}}
+		<h4>{{modalconfig.title===undefined||modalconfig.title===null?'': 'AbpIdentity::'+modalconfig.title||'' |
+			abpLocalization }}{{modalconfig.operatemess?'-'+modalconfig.operatemess[0].userName:''}}
 		</h4>
 	</ng-template>
 	<ng-template #libbody let-dialogRef>
 		<div class="modals_libbody">
-			
-			
-			
-
 			<ng-container *ngIf="modalconfig.status==='AddUsers'||modalconfig.status==='UpdateUsers'">
-				<mat-tab-group  mat-align-tabs="start" color="accent" >
-					<mat-tab  [label]="'AbpIdentity::UserInformations'|abpLocalization">
+				<mat-tab-group mat-align-tabs="start" color="accent">
+					<mat-tab [label]="'AbpIdentity::UserInformations'|abpLocalization">
 						<form #dyform="ngForm" class="dyform_form_box" [formGroup]="modalformgroup">
-							<lib-dynamic-form [_formgroup]="modalformgroup" [_formdata]="modalformdata"></lib-dynamic-form>
+							<lib-dynamic-form [_formgroup]="modalformgroup"
+								[_formdata]="modalformdata"></lib-dynamic-form>
 						</form>
 					</mat-tab>
-					<mat-tab  [label]="'AbpIdentity::Roles'|abpLocalization">
+					<mat-tab [label]="'AbpIdentity::Roles'|abpLocalization">
 						<div class="dyform_checkbox">
-							<mat-checkbox class="example_margin" 
-								*ngFor="let check of rolesgroup; let i = index" (change)="checkboxchange($event,check)" [checked]="check.ischeck">
+							<mat-checkbox class="example_margin" *ngFor="let check of rolesgroup; let i = index"
+								(change)="checkboxchange($event,check)" [checked]="check.ischeck">
 								{{ 'AbpIdentity::' + check.diaplayname | abpLocalization }}</mat-checkbox>
 						</div>
-	
+
 					</mat-tab>
 				</mat-tab-group>
 			</ng-container>
@@ -60,7 +79,8 @@
 				<lib-add-minus-form [_formgroup]="addminusformgroup"
 					[_AddMinusConfig]="addminusconfig"></lib-add-minus-form>
 			</ng-container>
-			<ng-container *ngIf="modalconfig.status==='LockUsers'||modalconfig.status==='SetPassword'||modalconfig.status==='SetTwoFactorEnabled'">
+			<ng-container
+				*ngIf="modalconfig.status==='LockUsers'||modalconfig.status==='SetPassword'||modalconfig.status==='SetTwoFactorEnabled'">
 				<form #dyform="ngForm" class="dyform_form_box" [formGroup]="modalformgroup">
 					<lib-dynamic-form [_formgroup]="modalformgroup" [_formdata]="modalformdata"></lib-dynamic-form>
 				</form>
@@ -71,8 +91,8 @@
 		<mat-dialog-actions>
 			<button mat-stroked-button (click)="dialogRef.close()">{{ 'AbpIdentity::Cancel' | abpLocalization
 				}}</button>
-				<!-- [disabled]="!modalformgroup.valid" -->
-			<button mat-raised-button color="accent"  (click)="OnSaveSubmit(dialogRef)">{{
+			<!-- [disabled]="!modalformgroup.valid" -->
+			<button mat-raised-button color="accent" (click)="OnSaveSubmit(dialogRef)">{{
 				'AbpIdentity::Save' | abpLocalization }}</button>
 		</mat-dialog-actions>
 	</ng-template>

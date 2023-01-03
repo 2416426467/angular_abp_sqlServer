@@ -1,10 +1,12 @@
 <div class="dyform_form_box" [formGroup]="_formgroup">
-    <div class="dyform_form_items" *ngFor="let datum of _formdata; let i = index"
-        [style]="datum.isfloat ? 'width:48%' : ''">
+    <div class="dyform_form_items" *ngFor="let datum of _formdata; let i = index" [style]="
+      layoutService.smallScreen ? '' : datum.isfloatval ? 'width:' + datum.isfloatval + '%' : ''
+    ">
         <div class="dyform_input_box">
             <div class="dyform_input_con">
                 <div class="dyform_input_label" *ngIf="datum.diaplayname">
-                    {{'AbpIdentity::' + datum.diaplayname | abpLocalization}}{{datum.isrequired?'*':''}}
+                    {{ 'AbpIdentity::' + datum.diaplayname | abpLocalization
+                    }}{{ datum.isrequired ? '*' : '' }}
                 </div>
                 <ng-container [ngTemplateOutlet]="this[datum.type]" [ngTemplateOutletContext]="{ $implicit: datum }">
                 </ng-container>
@@ -57,7 +59,9 @@
 </ng-template>
 <ng-template #checkbox let-datum [formGroup]="_formgroup">
     <div class="dyform_checkbox">
-        <mat-checkbox class="example_margin" (change)="checkboxchange(check, $event, formgroup, datum.name)"
+        <mat-checkbox class="example_margin" [style]="
+        layoutService.smallScreen ? '' : check.isfloatval ? 'width:' + check.isfloatval + '%' : ''
+      " (change)="checkboxchange(check, $event, formgroup, datum.name)"
             *ngFor="let check of datum.checkboxmenu; let i = index" [checked]="check.ischeck">
             {{ 'AbpIdentity::' + check.diaplayname | abpLocalization }}</mat-checkbox>
     </div>
@@ -73,6 +77,7 @@
 </ng-template>
 <ng-template #select let-datum [formGroup]="_formgroup">
     <div class="dyform_select">
+        <!-- {{datum.name}} -->
         <mat-select [formControlName]="datum.name" [(ngModel)]="datum.defaultValue">
             <mat-option *ngFor="let sltitem of datum.optionsmenu" [value]="sltitem.value">
                 {{ sltitem.label }}
@@ -82,24 +87,32 @@
 </ng-template>
 <ng-template #TreeSelect let-datum [formGroup]="_formgroup">
     <div class="dyform_input">
-        <input type="text" [matMenuTriggerFor]="TreeSelectmenu" [autocomplete]="datum.autocomplete"
+        <input type="text" (click)="openTreePopup()" [autocomplete]="datum.autocomplete"
             [placeholder]="'AbpIdentity::' + (datum.placeholder || '') | abpLocalization" [formControlName]="datum.name"
             [readonly]="true" />
         <ng-container *ngTemplateOutlet="operate; context: { $implicit: datum }"></ng-container>
     </div>
     <!-- <button mat-button [matMenuTriggerFor]="menu">Menu</button> -->
-    <mat-menu #TreeSelectmenu="matMenu">
+    <!-- <mat-menu #TreeSelectmenu="matMenu">
         <div class="tree_box" >
             <lib-tree [_TreeConfig]="datum.TreeSelectconfig" (_MenusSelect)="MenusSelect($event)" (_TreeMoveOrder)="TreeMoveOrder($event)"></lib-tree>
         </div>
-    </mat-menu>
-
+    </mat-menu> -->
+    <div class="TreeSelect_popup" *ngIf="isTreePopupShow">
+        <div class="tree_box">
+            <lib-tree [_TreeConfig]="datum.TreeSelectconfig" (_selectTreeItems)="selectTreeItems($event)"></lib-tree>
+        </div>
+    </div>
 </ng-template>
 
 <ng-template #operate let-datum>
+    <!-- {{_formgroup|json}} -->
     <div class="dyform_operate">
-        <mat-icon *ngIf="!_formgroup.get(datum.name).errors?.required && !datum.disabled && datum.isdelectbtn"
-            class="dyform_icon dyform_close" (click)="deletevalue(_formgroup, datum.name)">close
+        <mat-icon *ngIf="
+        !_formgroup.get(datum.name).errors?.required &&
+        !datum.disabled &&
+        (datum.isdelectbtn && _formgroup.get(datum.name).value ? true : false)
+      " class="dyform_icon dyform_close" (click)="deletevalue(_formgroup, datum.name)">close
         </mat-icon>
         <mat-icon class="dyform_icon dyform_eye" *ngIf="datum.iseyeshow" (click)="pwdeyechoose(ispwdeye)">
             {{ ispwdeye ? 'visibility' : 'visibility_off' }}
@@ -126,8 +139,14 @@
         <div *ngIf="_formgroup.get(datum.name).errors?.maxlength">
             字段长度不能大于{{ _formgroup.get(datum.name).errors?.maxlength?.requiredLength }}位
         </div>
-        <div>{{(_formgroup.get(datum.name).errors?.msg?'AbpIdentity::'+_formgroup.get(datum.name).errors?.msg:'' ) |
-            abpLocalization:('AbpIdentity::' + datum.diaplayname | abpLocalization)}}</div>
+        <div>
+            {{
+            (_formgroup.get(datum.name).errors?.msg
+            ? 'AbpIdentity::' + _formgroup.get(datum.name).errors?.msg
+            : ''
+            ) | abpLocalization : ('AbpIdentity::' + datum.diaplayname | abpLocalization)
+            }}
+        </div>
     </div>
 </ng-template>
 
@@ -164,7 +183,10 @@ formdata: dynamicform[] = [{
     isdelectbtn:true,//是否显示删除按钮
     validators: [Validators.required,Validators.maxLength(11)], //验证
     defaultValue: '', //默认值
-    optionsmenu: [], //下拉选择数据
+    optionsmenu: [{
+        label = ''
+        value = ''
+    }], //下拉选择数据
     checkboxmenu:[   {
         id: 0,
         diaplayname: '单选1',
@@ -176,7 +198,10 @@ formdata: dynamicform[] = [{
     }],//单选按钮选择数据
     autocomplete: 'off', //自动完成
     isfloat:true,//是否半长浮动//需相邻两项同时使用
+    isfloatval:'48',//设置行的宽度
     isRandomPwd:true,//是否启用随机密码
+
+    
 }]
 //设置表单字段
 formgroup: FormGroup = this.setformdata(this.formdata);

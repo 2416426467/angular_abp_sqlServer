@@ -9,8 +9,8 @@ import { IdentityConfigModule } from '../../projects/identity/config/src/identit
 import { SettingManagementConfigModule } from '@abp/ng.setting-management/config';
 import { TenantManagementConfigModule } from '@abp/ng.tenant-management/config';
 
-// import { ThemeBasicModule } from '../../projects/theme-basic/src/lib/theme-basic.module';
-import { ThemeBasicModule } from 'theme-basic';
+import { ThemeBasicModule } from '../../projects/theme-basic/src/lib/theme-basic.module';
+// import { ThemeBasicModule } from 'theme-basic';
 // import { ThemeBasicModule } from '@dignite-ng/theme-basic';
 // import { ThemeBasicModule } from '@abp/ng.theme.basic';
 

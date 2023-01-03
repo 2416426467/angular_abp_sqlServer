@@ -7,7 +7,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ModuleWithProviders, NgModule, NgModuleFactory } from '@angular/core';
 import { NgbDropdownModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxValidateCoreModule } from '@ngx-validate/core';
-import { RolesComponent } from './components/roles/roles.component';
+// import { RolesComponent } from './components/roles/roles.component';
 import { RolesroleschooseComponent } from './components/roles/roleschoose.component';
 import { UsersComponent } from './components/users/users.component';
 import { IdentityExtensionsGuard } from './guards/extensions.guard';
@@ -55,8 +55,8 @@ import {MatTabsModule} from '@angular/material/tabs';//选项卡
 @NgModule({
 
   declarations: [
-    RolesComponent,
     RolesroleschooseComponent,
+    // RolesComponent,
     UsersComponent,
     OrganizationUnitsComponent,
     ClaimTypesComponent,
@@ -65,7 +65,10 @@ import {MatTabsModule} from '@angular/material/tabs';//选项卡
     // PagealertComponent,
     // TableComponent,
   ],
-  exports: [RolesComponent, UsersComponent],
+  exports: [
+    // RolesComponent, 
+    UsersComponent
+  ],
   imports: [
     
     ComponentsModule,//通用组件

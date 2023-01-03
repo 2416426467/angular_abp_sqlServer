@@ -5,8 +5,8 @@ import {
 } from '@abp/ng.core';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { RolesComponent } from './components/roles/roles.component';
-import { UsersComponent } from './components/users/users.component';
+// import { RolesComponent } from './components/roles/roles.component';
+// import { UsersComponent } from './components/users/users.component';
 import { OrganizationUnitsComponent } from './components/organization-units/organization-units.component';
 import { eIdentityComponents } from './enums/components';
 import { IdentityExtensionsGuard } from './guards/extensions.guard';

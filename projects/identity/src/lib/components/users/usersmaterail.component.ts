@@ -3,9 +3,9 @@
 import { Component, Injectable, Injector, OnInit, InjectionToken } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators, FormsModule } from '@angular/forms';
 import { dynamicform } from 'projects/components/src/lib/interface/dynamic-form';
-import { IdentityUserService, IdentityRoleService } from '../../../../proxys/dignite/abp/identity/index';
+import { IdentityUserService, IdentityRoleService, OrganizationUnitService } from '../../../../proxys/dignite/abp/identity/index';
 import { ePermissionManagementComponents } from '@abp/ng.permission-management';//权限
-import { CreateUsers, increaseUserClaim, UpdateUsers, LockUsers, SetPasswordUsers, TwoFactorEnabledUsers } from "../../NewDefaults/defaults-users-form-modal";
+import { CreateUsers, increaseUserClaim, UpdateUsers, LockUsers, SetPasswordUsers, TwoFactorEnabledUsers, screenform } from "../../NewDefaults/defaults-users-form-modal";
 import { MatSnackBar } from '@angular/material/snack-bar'; // 快餐栏
 
 import { LocalizationService } from '@abp/ng.core';//本地化
@@ -25,7 +25,8 @@ export class UsersmaterailComponent implements OnInit {
 		private UserService: IdentityUserService,
 		private RoleService: IdentityRoleService,
 		private _snackBar: MatSnackBar,
-		private Localization: LocalizationService
+		private Localization: LocalizationService,
+		private UnitService: OrganizationUnitService
 	) { }
 	// 权限
 	providerKey: string;
@@ -140,13 +141,89 @@ export class UsersmaterailComponent implements OnInit {
 	addminusformgroup: FormGroup//自增表单字段
 	/* 所有claim 数据 */
 	ClaimAll: any[] = []
+	/* 组织机构列表 */
+	Unitlist: any[] = []
+	/* 筛选表单数据 */
+	screenformdata: any = []
+	/* 筛选表单字段 */
+	screenformgroup: FormGroup = this.setformdata(this.screenformdata);
+	/* 筛选弹窗是否显示 */
+	isScreenShow: boolean = false
+	/* 打开筛选弹窗 */
+	openScreen() {
+		this.isScreenShow = !this.isScreenShow
+		return
+		if (!this.isScreenShow) return
+		screenform.forEach((item: any, index: any) => {
+			if (item.type == 'select') {
+				item.optionsmenu = this.rolesgroupcopy
+			}
+			if (item.type == 'TreeSelect') {
+				item.TreeSelectconfig.list = this.Unitlist
+				item.TreeSelectconfig.formname = item.name
+			}
+		})
+		this.screenformdata = screenform
+		/* 筛选表单字段 */
+		this.screenformgroup = this.setformdata(this.screenformdata);
+	}
+	/* 关闭筛选弹窗 */
+	closeScreen() {
+		this.isScreenShow = false
+	}
+	/* 筛选提交 */
+	ScreenSubmit() {
+		// console.log(this.screenformgroup.value, "筛选提交")
+		let _that=this
+		let screenform = this.screenformgroup.value
+		// screenform.OrganizationUnitId
+		this.RecursiveLoop(this.Unitlist, screenform.OrganizationUnitId, function (res) {
+			console.log('筛选出的数据', res)
+			if (res) {
+				screenform.OrganizationUnitId = res.id
+			} else {
+				screenform.OrganizationUnitId = ''
+			}
+			screenform.IsLockedOut = false
+			screenform.NotActive = false
+			screenform.checkbox.forEach((item: any, index: any) => {
+				screenform[item.name] = item.ischeck
+			})
+			console.log(screenform, "筛选提交")
+			_that.getallUsers(_that.formgroup.value.filter,screenform)
+		})
+
+
+		// return
+		this.closeScreen()//关闭筛选弹窗
+	}
+	/* 递归·1查询指定父级id的数据 */
+	RecursiveLoop(dataarr: any, parentId: string, RecursiveLoopback: any) {
+		if (parentId === '' || parentId === null) {
+			RecursiveLoopback && RecursiveLoopback();
+			return;
+		}
+		try {
+			dataarr.forEach((item1: any, index1: any) => {
+				if (item1.displayName === parentId) {
+					throw item1;
+				}
+				if (item1.children.length > 0) {
+					this.RecursiveLoop(item1.children, parentId, RecursiveLoopback);
+				}
+			});
+		} catch (error) {
+			RecursiveLoopback && RecursiveLoopback(error);
+		}
+	}
+
 
 	ngOnInit(): void {
 		this.getCurrentUser()//获取当前用户信息
 		this.getallUsers();//获取所有用户
 		this.getallroles();
 		this.getClaimAll()
-
+		this.getunitsList()
 	}
 	/* 获取所有claim */
 	getClaimAll() {
@@ -166,9 +243,30 @@ export class UsersmaterailComponent implements OnInit {
 				res.items.forEach((item: any, index: any) => {
 					item.ischeck = false
 					item.diaplayname = item.name
+					item.label = item.name
+					item.value = item.id
 				})
 				this.rolesgroup = res.items
 				this.rolesgroupcopy = JSON.parse(JSON.stringify(res.items))
+
+				screenform.forEach((item: any, index: any) => {
+					if (item.type == 'select') {
+						let ss=[{
+							label:'',
+							value:'',
+							isDefault: false,
+							isStatic: false,
+							isPublic: false,
+							id: '',
+							extraProperties: undefined
+						}]
+						res.items=[...ss,...res.items]
+						item.optionsmenu = res.items
+					}
+				})
+				this.screenformdata = screenform
+				/* 筛选表单字段 */
+				this.screenformgroup = this.setformdata(this.screenformdata);
 			});
 	}
 	/* 获取当前用户信息 */
@@ -180,13 +278,20 @@ export class UsersmaterailComponent implements OnInit {
 		})
 	}
 	/* 获取所有用户 */
-	getallUsers(filter?: any) {
+	getallUsers(filter?: any,input?:any) {
 		var _that = this
 		this.UserService
 			.getList({
 				maxResultCount: this.SetUsersTable.maxResultCount,
 				skipCount: this.SetUsersTable.skipCount * this.SetUsersTable.maxResultCount,
 				filter: filter,
+				roleId:input?.RoleId||'',
+				organizationUnitId:input?.OrganizationUnitId||'',
+				phoneNumber:input?.PhoneNumber||'',
+				userName:input?.UserName||'',
+				email:input?.Email||'',
+				isLockedOut:input?.IsLockedOut||'',
+				notActive:input?.NotActive||'',
 			})
 			.subscribe(res => {
 				console.log(res, '获取所有用户', _that.currentUser);
@@ -201,6 +306,34 @@ export class UsersmaterailComponent implements OnInit {
 					list: res.items,
 					totalCount: res.totalCount,
 				})
+			});
+	}
+	/* 获取组织机构列表 */
+	getunitsList() {
+		this.UnitService
+			.getList({
+				parentId: '',
+				recursive: true,
+			})
+			.subscribe(res => {
+				// this.formdata.forEach((item: any, index: any) => {
+				// 	if (item.type === 'TreeSelect') {
+				// 		item.TreeSelectconfig.list = res.items
+				// 		item.TreeSelectconfig.isInput = true
+				// 	}
+				// })
+				this.Unitlist = res.items
+				screenform.forEach((item: any, index: any) => {
+					
+					if (item.type == 'TreeSelect') {
+						item.TreeSelectconfig.list = res.items
+						item.TreeSelectconfig.formname = item.name
+					}
+				})
+				this.screenformdata = screenform
+				/* 筛选表单字段 */
+				this.screenformgroup = this.setformdata(this.screenformdata);
+				console.log('获取组织机构列表', res)
 			});
 	}
 	/* 搜索用户 */
@@ -382,7 +515,7 @@ export class UsersmaterailComponent implements OnInit {
 					title: wayval.label,
 					status: 'delete',
 					contype: 'Users',
-					delectlabel:  this.Localization.instant('AbpIdentity::ItemWillBeDeletedMessage'),
+					delectlabel: this.Localization.instant('AbpIdentity::ItemWillBeDeletedMessage'),
 					UsersId: wayval.operatemess[0].id,
 					operatemess: wayval.operatemess
 				})
@@ -470,7 +603,7 @@ export class UsersmaterailComponent implements OnInit {
 		}
 	}
 	/* 删除用户 */
-	deleteUser(SetTwoFactorEnabledback?: any){
+	deleteUser(SetTwoFactorEnabledback?: any) {
 		this.UserService.delete(this.modalconfig.UsersId).subscribe(res => {
 			this._snackBar.openFromComponent(SnackBarComponent, {
 				data: {

@@ -20,7 +20,7 @@
 	}
 }
 
-::ng-deep.roles_body {
+.roles_body {
 	width: 100%;
 	padding: 20px;
 	height: calc(100% - 60px);
@@ -30,6 +30,12 @@
 		width: 100%;
 		position: relative;
 		top: 2px;
+		display: flex;
+		align-items: center;
+
+		.roles_form_boxmore {
+			margin-bottom: 10px;
+		}
 
 		.roles_search {
 			position: absolute;
@@ -42,7 +48,38 @@
 			align-items: center;
 			justify-content: center;
 		}
+
+
 	}
+
+	.roles_form {
+		position: relative;
+
+		.screen_box {
+			position: absolute;
+			top: 45px;
+			left: 0;
+			width: 100%;
+			min-height: 100px;
+			z-index: 120;
+			background-color: rgb(255 255 255);
+			border-radius: 5px;
+			box-shadow: 0px 4px 16px -4px #ced4da;
+			border: 1px solid #ced4da;
+			padding: 20px 30px;
+
+			.screen_footer{
+				display: flex;
+				align-items: center;
+				justify-content: flex-end;
+				button+button{
+					margin-left: 10px;
+				}
+			}
+		}
+	}
+
+
 
 	.roles_table {
 		height: calc(100% - 40px);
@@ -66,13 +103,14 @@
 	z-index: 99;
 	background: #fff;
 }
+
 ::ng-deep.mat-tab-body-content {
-    padding: 10px;
+	padding: 10px;
 }
 
 .dyform_checkbox {
 	.example_margin {
-	  display: block;
-	  padding: 5px 0;
+		display: block;
+		padding: 5px 0;
 	}
-  }
+}

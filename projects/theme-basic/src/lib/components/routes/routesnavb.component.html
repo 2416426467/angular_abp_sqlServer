@@ -1,10 +1,11 @@
 <!-- 左侧菜单导航 -->
-<mat-nav-list class="matnavlist_box">
+<mat-nav-list class="matnavlist_box" *ngIf="false">
     <ng-container *ngFor="let route of routesService.visible$ | async; trackBy: trackByFn"
         [ngTemplateOutlet]="isDropdown(route) ? dropdownLink : defaultLink"
         [ngTemplateOutletContext]="{ $implicit: route }">
     </ng-container>
 </mat-nav-list>
+
 <!-- not drop-down -->
 <ng-template #defaultLink let-route>
     <div class="matnavlist_items" *abpPermission="route.requiredPolicy" [routerLinkActiveOptions]="{ exact: true }"

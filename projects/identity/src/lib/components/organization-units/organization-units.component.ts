@@ -117,10 +117,6 @@ export class OrganizationUnitsComponent implements OnInit {
 
     // console.log(_that.durationInSeconds * 1000)
 
-   
-
-
-
   }
 
   /* 开启 modal */

@@ -3,6 +3,7 @@
 
 import { Component, OnInit, Input, ViewChild, TemplateRef } from '@angular/core';
 import { FormBuilder, FormsModule } from '@angular/forms';
+import { LayoutService } from '../../services/layout.service';
 
 
 @Component({
@@ -11,7 +12,13 @@ import { FormBuilder, FormsModule } from '@angular/forms';
   styleUrls: ['./dynamic-form.component.scss'],
 })
 export class DynamicFormComponent implements OnInit {
-  constructor(private fb: FormBuilder, private FormsModule: FormsModule) { }
+  constructor(
+    private fb: FormBuilder,
+    private FormsModule: FormsModule,
+    private layoutService: LayoutService
+  ) { }
+  // smallScreen:this.layoutService.smallScreen
+  // this.layoutService.smallScreen ? '330px' : this._ModalConfig.setwidth
 
   @ViewChild('text', { static: true }) text: TemplateRef<any>;
   @ViewChild('password', { static: true }) password: TemplateRef<any>;
@@ -33,14 +40,32 @@ export class DynamicFormComponent implements OnInit {
   // dataSource = setconfigs;
   displayedColumns: any = []
   // dataSource=[];
+  /*TreeSelect 弹窗是否显示 */
+  isTreePopupShow:boolean=false
+  /* 打开TreeSelect 弹窗 */
+  openTreePopup(){
+    console.log(this._formgroup.get('OrganizationUnitId').value,111111)
+    this.isTreePopupShow=!this.isTreePopupShow
+  }
+  /* 关闭TreeSelect 弹窗 */
+  closeTreePopup(){
+    this.isTreePopupShow=false
+  }
+  /* 选择 TreeSelect 项 */
+  selectTreeItems(event:any){
+    this._formgroup.get(event.TreeConfig.formname).setValue(event.nodes.displayName);
+    // this._formgroup.get('').setValue(event.nodes.displayName);
+    // console.log('选择 TreeSelect 项',event,event.TreeConfig.formname,this._formgroup.value,event.nodes.id)
+    this.closeTreePopup()
+  }
 
   ngOnChanges(res: any) {
-    this._formdata.forEach((item: any, index: any) => {
-      if (item.type === 'increase') {
-        this.displayedColumns = [item.setincrease[0]['attrField'], item.setincrease[0]['valueField'], 'operate'];
-      }
-    })
-    console.log(this._formdata, "ngOnChanges", this.displayedColumns)
+    // this._formdata.forEach((item: any, index: any) => {
+    //   if (item.type === 'increase') {
+    //     this.displayedColumns = [item.setincrease[0]['attrField'], item.setincrease[0]['valueField'], 'operate'];
+    //   }
+    // })
+    console.log(this._formdata, "ngOnChanges", this._formgroup,this._formgroup.get('OrganizationUnitId'))
   }
   ngOnInit(): void {
     this.getcheckall(); //获取复选框选择的内容
@@ -87,19 +112,19 @@ export class DynamicFormComponent implements OnInit {
     valuedata: ''
   }
 
-  /*increase 更改下拉选择值 */
-  selectionChange(res: any, datum: any) {
-    this.groupitems.attrdata = res.value
-    // this._formgroup.value.claim=[]
-    console.log(res.value, datum, "更改下拉选择值", this.groupitems, this._formdata)
-    this.setformfield(datum)
-  }
-  /*increase 更改输入框值 */
-  valuedatainput(event: any, datum: any) {
-    this.groupitems.valuedata = event.value
-    this.setformfield(datum)
-    console.log(event.value, "更改输入框值", this._formdata)
-  }
+  // /*increase 更改下拉选择值 */
+  // selectionChange(res: any, datum: any) {
+  //   this.groupitems.attrdata = res.value
+  //   // this._formgroup.value.claim=[]
+  //   console.log(res.value, datum, "更改下拉选择值", this.groupitems, this._formdata)
+  //   this.setformfield(datum)
+  // }
+  // /*increase 更改输入框值 */
+  // valuedatainput(event: any, datum: any) {
+  //   this.groupitems.valuedata = event.value
+  //   this.setformfield(datum)
+  //   console.log(event.value, "更改输入框值", this._formdata)
+  // }
   /* 设置表单的字段 */
   setformfield(_datum: any) {
     if (this.groupitems.attrdata === '' || this.groupitems.valuedata === '') return
@@ -122,18 +147,18 @@ export class DynamicFormComponent implements OnInit {
     arr.push(this.getOne(ENGLISH))
     arr.push(this.getOne(special))
 
-  // 获取需要生成的长度
-  var len = 6
+    // 获取需要生成的长度
+    var len = 6
 
-  for (var i = 4; i < len; i++) {
-    // 从数组里面抽出一个
-    arr.push(configpwd[Math.floor(Math.random() * configpwd.length)])
-  }
-  // 乱序
-  var newArr = ''
-  for (var j = 0; j < len; j++) {
-    newArr+=arr.splice(Math.random() * arr.length, 1)[0]
-  }
+    for (var i = 4; i < len; i++) {
+      // 从数组里面抽出一个
+      arr.push(configpwd[Math.floor(Math.random() * configpwd.length)])
+    }
+    // 乱序
+    var newArr = ''
+    for (var j = 0; j < len; j++) {
+      newArr += arr.splice(Math.random() * arr.length, 1)[0]
+    }
     this._formgroup.get(_datum.name).setValue(newArr);
     console.log(newArr, "生成密码")
   }

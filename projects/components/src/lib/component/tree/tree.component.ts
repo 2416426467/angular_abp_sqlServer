@@ -19,6 +19,7 @@ export class TreeComponent implements OnInit {
   TreeConfig:any;//tree配置
   @Output() _MenusSelect=new EventEmitter()
   @Output() _TreeMoveOrder=new EventEmitter()
+  @Output() _selectTreeItems=new EventEmitter()
   /* 接收传值tree数据，并重新赋值 */
   @Input() set _TreeConfig(val:any){
     this.dataSource= new ArrayDataSource(val.list);
@@ -37,6 +38,8 @@ export class TreeComponent implements OnInit {
   selectTree_label(nodes?:any){
     console.log(nodes,'选择树')
     this.select_fork=nodes
+    let TreeConfig=this.TreeConfig
+    this._selectTreeItems.emit({nodes,TreeConfig})
   }
   /* 操作菜单选择 */
   menusSelect(nodes: any,menu: any){

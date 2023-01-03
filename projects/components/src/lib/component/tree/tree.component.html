@@ -60,7 +60,7 @@
 
 <!-- 
 <div class="tree_box">
-    <lib-tree [_TreeConfig]="treeconfig" (_MenusSelect)="MenusSelect($event)" (_TreeMoveOrder)="TreeMoveOrder($event)"></lib-tree>
+    <lib-tree [_TreeConfig]="treeconfig" (_selectTreeItems)="selectTreeItems($event)" (_MenusSelect)="MenusSelect($event)" (_TreeMoveOrder)="TreeMoveOrder($event)"></lib-tree>
 </div>
 
 
@@ -82,12 +82,18 @@ constructor(
 
 UnitTree_data: any
 treeconfig: any = {
-    list: [],
+    list: [{
+        children: [],
+        displayName: "1111",
+        id: "d5190f98-c798-43cb-9c27-3a07c030e78d",
+    }],
+    
     // ischecked: true,//是否多选，暂未定义功能
     // isoperate: true,//是否显示菜单
     // isdrop:true,//是否可以拖动
     //isSelectShow:true,//是否显示选中的按钮
     // isInput:true,//是否是输入框树
+    //formname:'',//输入框树表单名称
 }
 
 ngOnInit(): void {
@@ -178,10 +184,12 @@ setObjectVal(object: any, input: any) {
     TreeMoveOrder(event: any){
         console.log(event,'tree项拖动事件')
 
-
     }
 
-
+    /* 选择树分支项*/
+    selectTreeItems(event:any){
+        console.log('选择 TreeSelect 项',event)
+    }
 
 
 
